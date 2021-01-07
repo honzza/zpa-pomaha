@@ -33,7 +33,8 @@ app.use(passport.session());
 
 // Routes definition
 app.use("/auth", require("./routes/auth-routes"));
-app.use("/main", require("./routes/stravaupdate-routes"));
+app.use("/main", require("./routes/users-routes"));
+app.use("/strava", require("./routes/stravaupdate-routes"));
 app.use("/api/users", require("./routes/users-routes"));
 app.use("/api/activities", require("./routes/activities-routes"));
 

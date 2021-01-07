@@ -1,80 +1,73 @@
 const axios = require("axios");
-
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
-// Get updated activities data from Strava
-function getActivities(u, next) {
-  axios
-    .get(`https://www.strava.com/api/v3/athletes/${u.uid}/stats`, {
-      headers: {
-        Authorization: `Bearer ${u.shortlivedATC}`,
-      },
-    })
-    .then((results) => {
-      u.activity.ride = results.data.ytd_ride_totals.distance;
-      u.activity.run = results.data.ytd_run_totals.distance;
-      u.activity.swim = results.data.ytd_swim_totals.distance;
-    })
-    .catch((error) => {
-      return next(
-        new HttpError(
-          `Fetching activities from Strava for user ${u.firstname} ${u.lastname} failed.`,
-          500
-        )
-      );
-    })
-    .then(() => {
-      try {
-        u.save();
-      } catch (error) {
-        return next(new HttpError("Saving data to database failed.", 500));
-      }
-    });
-}
-
-// Get every document from DB and update tokens and activities
-const getAthleteStats = async (req, res, next) => {
+const updateAthletes = async (req, res, next) => {
   try {
-    const users = User.find().then((foundUser) => {
+    await User.find().exec((err, foundUser) => {
       foundUser.forEach(async (u) => {
-        if (new Date() > u.expirationATC) {
-          axios
-            .post(
+        try {
+          if (new Date() > u.expirationATC) {
+            const resultsTokens = await axios.post(
               `https://www.strava.com/api/v3/oauth/token?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${u.refreshTC}`
-            )
-            .then((results) => {
-              u.shortlivedATC = results.data.access_token;
-              u.refreshTC = results.data.refresh_token;
-              u.expirationATC = results.data.expires_at * 1000;
-            })
-            .catch((error) => {
-              return next(
-                new HttpError(
-                  `Fetching tokens from Strava for user ${u.firstname} ${u.lastname} failed.`,
-                  500
-                )
-              );
-            })
-            .then(() => getActivities(u, next));
-        } else {
-          getActivities(u, next);
+            );
+            u.shortlivedATC = resultsTokens.data.access_token;
+            u.refreshTC = resultsTokens.data.refresh_token;
+            u.expirationATC = resultsTokens.data.expires_at * 1000;
+          }
+          const resultsActivities = await axios.get(
+            `https://www.strava.com/api/v3/athletes/${u.uid}/stats`,
+            {
+              headers: {
+                Authorization: `Bearer ${u.shortlivedATC}`,
+              },
+            }
+          );
+          u.activity.ride = resultsActivities.data.ytd_ride_totals.distance;
+          u.activity.run = resultsActivities.data.ytd_run_totals.distance;
+          u.activity.swim = resultsActivities.data.ytd_swim_totals.distance;
+        } catch (err) {
+          return next(
+            new HttpError(
+              `Fetching data from Strava for user ${u.firstname} ${u.lastname} failed`
+            ),
+            500
+          );
+        }
+        try {
+          await u.save();
+        } catch (err) {
+          return next(new HttpError("Saving data to database failed", 500));
         }
       });
     });
-  } catch (error) {
+
+    //res.json({ message: "Athlete tokens and activities updated" });
+  } catch (err) {
     return next(
       new HttpError(
-        "Fetching user data from database failed, please try again later.",
+        "Fetching user data from database failed, please try again later",
         500
       )
     );
   }
-  res.send("done");
+
+  setTimeout(async () => {
+    let users;
+    try {
+      users = await User.find();
+    } catch (err) {
+      return next(
+        new HttpError("Fetching user data failed, please try again later", 500)
+      );
+    }
+    if (users.length === 0) {
+      return next(new HttpError("Could not find any user", 404));
+    }
+    const result = users.map((u) => u.toObject({ getters: true }));
+    res.json({ result });
+    console.log("timeout");
+  }, 5000);
 };
 
-//if (users.length === 0) {
-//  return next(new HttpError("Could not find any user.", 404));
-//res.json({ userArray: users.toObject() });
-
-exports.getAthleteStats = getAthleteStats;
+exports.updateAthletes = updateAthletes;
