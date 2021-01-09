@@ -1,5 +1,6 @@
 const StravaStrategy = require("passport-strava").Strategy;
 const User = require("../models/user");
+const axios = require("axios");
 
 module.exports = function (passport) {
   passport.use(
@@ -21,6 +22,28 @@ module.exports = function (passport) {
           activity: { ride: 0, run: 0, swim: 0 },
           createdAt: Date.now(),
         };
+
+        // Check if logging athlete is member of selected club
+        try {
+          let clubMember = await axios.get(
+            "https://www.strava.com/api/v3/athlete/clubs",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          if (!clubMember.data.find((v) => v.id == process.env.CLUB_ID)) {
+            return done(null, false, {
+              message:
+                "Sorry, this application is only for the members of the ZPA club",
+            });
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        // Check if logging athlete already exists
         try {
           let user = await User.findOne({ uid: profile.id });
           if (user) {

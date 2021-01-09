@@ -41,8 +41,7 @@ const updateAthletes = async (req, res, next) => {
         }
       });
     });
-
-    //res.json({ message: "Athlete tokens and activities updated" });
+    res.json({ message: "Athlete tokens and activities updated" });
   } catch (err) {
     return next(
       new HttpError(
@@ -52,22 +51,29 @@ const updateAthletes = async (req, res, next) => {
     );
   }
 
-  setTimeout(async () => {
-    let users;
-    try {
-      users = await User.find();
-    } catch (err) {
-      return next(
-        new HttpError("Fetching user data failed, please try again later", 500)
-      );
-    }
-    if (users.length === 0) {
-      return next(new HttpError("Could not find any user", 404));
-    }
-    const result = users.map((u) => u.toObject({ getters: true }));
-    res.json({ result });
-    console.log("timeout");
-  }, 5000);
+  // setTimeout(async () => {
+  //   let users;
+  //   try {
+  //     users = await User.find();
+  //   } catch (err) {
+  //     return next(
+  //       new HttpError("Fetching user data failed, please try again later", 500)
+  //     );
+  //   }
+  //   if (users.length === 0) {
+  //     return next(new HttpError("Could not find any user", 404));
+  //   }
+  //   const result = users.map((u) => u.toObject({ getters: true }));
+  //   res.json({ result });
+  //   console.log("timeout");
+  // }, 5000);
+
+  // if (new Date() - process.env.LAST_UPDATE < process.env.UPD_INTERVAL) {
+  //   update strava tokens and activities
+  //   process.env.LAST_UPDATE = new Date()
+  // } else {
+  //   console.log("No update needed, displaying data");
+  // }
 };
 
 exports.updateAthletes = updateAthletes;

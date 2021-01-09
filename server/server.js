@@ -5,6 +5,8 @@ const session = require("express-session");
 const morgan = require("morgan");
 const passport = require("passport");
 const HttpError = require("./models/http-error");
+const flash = require("connect-flash");
+const cookieParser = require("cookie-parser");
 
 // Config
 dotenv.config({ path: "./config/config.env" });
@@ -17,12 +19,16 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.use(cookieParser("keyboard cat"));
+app.use(flash());
+
 // Sessions
 app.use(
   session({
     secret: "zetpik pomaha",
     resave: false,
     saveUninitialized: false,
+    cookie: { maxAge: 60000 },
     // store - doplnit
   })
 );
@@ -35,8 +41,10 @@ app.use(passport.session());
 app.use("/auth", require("./routes/auth-routes"));
 app.use("/main", require("./routes/users-routes"));
 app.use("/strava", require("./routes/stravaupdate-routes"));
-app.use("/api/users", require("./routes/users-routes"));
-app.use("/api/activities", require("./routes/activities-routes"));
+app.use("/activity", require("./routes/activities-routes"));
+app.use("/error", (req, res) => {
+  res.json({ error: req.flash("error")[0] });
+});
 
 // Unknown route error
 app.use((req, res, next) => {
