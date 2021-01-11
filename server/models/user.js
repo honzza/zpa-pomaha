@@ -10,11 +10,21 @@ const userSchema = new Schema({
   refreshTC: { type: String, required: true },
   scope: { type: String, required: true },
   activity: {
-    ride: { type: Number, required: false },
-    run: { type: Number, required: false },
-    swim: { type: Number, required: false },
+    ride: {
+      m: { type: Number, required: false },
+      kc: { type: Number, required: false },
+    },
+    run: {
+      m: { type: Number, required: false },
+      kc: { type: Number, required: false },
+    },
+    swim: {
+      m: { type: Number, required: false },
+      kc: { type: Number, required: false },
+    },
   },
   createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("User", userSchema);

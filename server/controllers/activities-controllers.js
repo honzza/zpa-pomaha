@@ -9,7 +9,7 @@ const getActivityByType = async (req, res, next) => {
   }
   let activities;
   try {
-    const nestedKey = `activity.${activityParam}`;
+    const nestedKey = `activity.${activityParam}.m`;
     const query = { [nestedKey]: { $gt: 0 } };
     activities = await User.find(query);
   } catch (err) {
@@ -27,7 +27,10 @@ const getActivityByType = async (req, res, next) => {
     return {
       firstname: a.firstname,
       lastname: a.lastname,
-      [activityParam]: a.activity[activityParam],
+      [activityParam]: {
+        m: a.activity[activityParam].m,
+        kc: a.activity[activityParam].kc,
+      },
     };
   });
   res.json(result);

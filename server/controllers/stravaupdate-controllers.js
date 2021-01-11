@@ -23,9 +23,13 @@ const updateAthletes = async (req, res, next) => {
               },
             }
           );
-          u.activity.ride = resultsActivities.data.ytd_ride_totals.distance;
-          u.activity.run = resultsActivities.data.ytd_run_totals.distance;
-          u.activity.swim = resultsActivities.data.ytd_swim_totals.distance;
+          u.activity.ride.m = resultsActivities.data.ytd_ride_totals.distance;
+          u.activity.ride.kc = (u.activity.ride.m / 1000) * process.env.RIDE_KC;
+          u.activity.run.m = resultsActivities.data.ytd_run_totals.distance;
+          u.activity.run.kc = (u.activity.run.m / 1000) * process.env.RUN_KC;
+          u.activity.swim.m = resultsActivities.data.ytd_swim_totals.distance;
+          u.activity.swim.kc = (u.activity.swim.m / 1000) * process.env.SWIM_KC;
+          u.updatedAt = new Date();
         } catch (err) {
           return next(
             new HttpError(

@@ -19,8 +19,11 @@ module.exports = function (passport) {
           expirationATC: Date.now(),
           refreshTC: refreshToken,
           scope: process.env.SCOPE,
-          activity: { ride: 0, run: 0, swim: 0 },
-          createdAt: Date.now(),
+          activity: {
+            ride: { m: 0, kc: 0 },
+            run: { m: 0, kc: 0 },
+            swim: { m: 0, kc: 0 },
+          },
         };
 
         // Check if logging athlete is member of selected club
@@ -34,6 +37,12 @@ module.exports = function (passport) {
             }
           );
           if (!clubMember.data.find((v) => v.id == process.env.CLUB_ID)) {
+            try {
+              let user = await User.findOne({ uid: profile.id });
+              if (user) await user.remove();
+            } catch (err) {
+              console.error(err);
+            }
             return done(null, false, {
               message:
                 "Sorry, this application is only for the members of the ZPA club",

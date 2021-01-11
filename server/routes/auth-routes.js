@@ -1,14 +1,17 @@
 const { Router } = require("express");
 const router = Router();
 const passport = require("passport");
+const { ensureAuth, ensureGuest } = require("../middleware/auth");
 
 router.get(
   "/strava",
+  ensureGuest,
   passport.authenticate("strava", { scope: [process.env.SCOPE] })
 );
 
 router.get(
   "/strava/callback",
+  ensureGuest,
   passport.authenticate("strava", {
     failureRedirect: "/error",
     failureFlash: true,
@@ -18,10 +21,10 @@ router.get(
   }
 );
 
-router.get("/logout", (req, res) => {
+router.get("/logout", ensureAuth, (req, res) => {
   req.logout();
   req.flash("message", "You have successfully logged out");
-  res.redirect("/");
+  res.redirect("/logout");
 });
 
 module.exports = router;

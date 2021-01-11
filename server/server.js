@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const session = require("express-session");
 const morgan = require("morgan");
@@ -7,6 +8,8 @@ const passport = require("passport");
 const HttpError = require("./models/http-error");
 const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
+const { ensureAuth, ensureGuest } = require("./middleware/auth");
+const MongoStore = require("connect-mongo")(session);
 
 // Config
 dotenv.config({ path: "./config/config.env" });
@@ -28,8 +31,8 @@ app.use(
     secret: "zetpik pomaha",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 60000 },
-    // store - doplnit
+    //cookie: { maxAge: 60000 },
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
@@ -39,9 +42,12 @@ app.use(passport.session());
 
 // Routes definition
 app.use("/auth", require("./routes/auth-routes"));
-app.use("/main", require("./routes/users-routes"));
-app.use("/strava", require("./routes/stravaupdate-routes"));
-app.use("/activity", require("./routes/activities-routes"));
+app.use("/main", ensureAuth, require("./routes/users-routes"));
+app.use("/update", ensureAuth, require("./routes/stravaupdate-routes"));
+app.use("/activity", ensureAuth, require("./routes/activities-routes"));
+app.use("/logout", ensureGuest, (req, res) => {
+  res.json({ message: req.flash("message")[0] });
+});
 app.use("/error", (req, res) => {
   res.json({ error: req.flash("error")[0] });
 });
