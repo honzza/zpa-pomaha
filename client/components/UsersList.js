@@ -1,16 +1,24 @@
 import { DataGrid } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@chakra-ui/react";
+//import { csCZ } from '@material-ui/core/locale';
 
 const useStyles = makeStyles({
   root: {
     "& .datagrid--header": {
-      backgroundColor: "#25283d",
-      color: "white",
+      backgroundColor: "#b6b6b6",
     },
     "& .datagrid--cell": {},
+    backgroundColor: "#ffffff",
   },
 });
+
+// const formatter = new Intl.NumberFormat("cs-CZ", {
+//   style: "currency",
+//   currency: "CZK",
+//   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+//   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+// });
 
 const UsersList = (props) => {
   if (props.items.length === 0) {
@@ -116,7 +124,7 @@ const UsersList = (props) => {
     },
     {
       field: "kcTotal",
-      headerName: "Celkem Kč",
+      headerName: "Celkem/Kč",
       width: 125,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
@@ -126,7 +134,7 @@ const UsersList = (props) => {
   const classes = useStyles();
 
   return (
-    <Box maxW="1230px" h="68vh" mx="auto" my="20px">
+    <Box maxW="1230px" h="63vh" mx="auto" my="20px">
       <DataGrid
         className={classes.root}
         autoHeight
@@ -142,11 +150,16 @@ const UsersList = (props) => {
           columnMenuUnsort: "Zruš řazení",
           columnMenuSortAsc: "Vzestupně",
           columnMenuSortDesc: "Sestupně",
+          columnMenuShowColumns: "Vyber sloupce",
           filterPanelOperators: "Operátor",
           filterPanelDeleteIconLabel: "Zruš",
           filterPanelColumns: "Sloupec",
           columnHeaderFiltersTooltipActive: (count) => `${count} aktivní filtr`,
           columnHeaderSortIconLabel: "Řazení",
+          columnsPanelTextFieldLabel: "Najdi sloupec",
+          columnsPanelTextFieldPlaceholder: "Název sloupce",
+          columnsPanelShowAllButton: "Ukaž vše",
+          columnsPanelHideAllButton: "Skryj vše",
         }}
       />
     </Box>
