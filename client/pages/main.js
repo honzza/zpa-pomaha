@@ -1,7 +1,6 @@
-import React from "react";
 import UsersList from "../components/UsersList";
 
-const Users = () => {
+const Main = () => {
   const USERS = [
     {
       id: "1jdshdjsh",
@@ -19,7 +18,7 @@ const Users = () => {
       lastname: "dvorak",
       activity: {
         ride: { m: 1000, kc: 10 },
-        run: { m: 5503, kc: 5.503 },
+        run: { m: 5543, kc: 5.503 },
         swim: { m: 0, kc: 0 },
       },
     },
@@ -29,7 +28,7 @@ const Users = () => {
       lastname: "dvorak",
       activity: {
         ride: { m: 0, kc: 0 },
-        run: { m: 5503, kc: 7 },
+        run: { m: 5563, kc: 7 },
         swim: { m: 2000, kc: 200 },
       },
     },
@@ -37,4 +36,4 @@ const Users = () => {
   return <UsersList items={USERS} />;
 };
 
-export default Users;
+export default Main;
