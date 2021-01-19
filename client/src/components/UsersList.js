@@ -3,16 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@chakra-ui/react";
 //import { csCZ } from '@material-ui/core/locale';
 
-const useStyles = makeStyles({
-  root: {
-    "& .datagrid--header": {
-      backgroundColor: "#b6b6b6",
-    },
-    "& .datagrid--cell": {},
-    backgroundColor: "#ffffff",
-  },
-});
-
 // const formatter = new Intl.NumberFormat("cs-CZ", {
 //   style: "currency",
 //   currency: "CZK",
@@ -21,6 +11,18 @@ const useStyles = makeStyles({
 // });
 
 const UsersList = (props) => {
+  const useStyles = makeStyles({
+    root: {
+      "& .datagrid--header": {
+        backgroundColor: "#b6b6b6",
+      },
+      "& .datagrid--cell": {},
+      backgroundColor: "#ffffff",
+    },
+  });
+
+  const classes = useStyles();
+
   if (props.items.length === 0) {
     return (
       <div className="center">
@@ -130,8 +132,6 @@ const UsersList = (props) => {
       cellClassName: "datagrid--cell",
     },
   ];
-
-  const classes = useStyles();
 
   return (
     <Box maxW="1230px" h="63vh" mx="auto" my="20px">
