@@ -1,6 +1,15 @@
-import { Image, Box, Text } from "@chakra-ui/react";
+import { Image, Box, Text, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useContext } from "react";
+import AuthContext from "../context/auth-context";
 
 export default function Login() {
+  const auth = useContext(AuthContext);
+
+  const authClickHandler = () => {
+    auth.login();
+  };
+
   return (
     <Box w="50%" margin="auto" p="20px">
       <Image
@@ -21,13 +30,17 @@ export default function Login() {
       <Text fontWeight="600" pb="20px" align="center" color="#FC4C02">
         Pokračujte prosím přihlášením do aplikace kliknutím na tlačítko níže.
       </Text>
-      <Image
-        src="btn_strava_connectwith_orange.svg"
-        alt="Connect with STRAVA"
-        htmlWidth="290px"
-        m="auto"
-        p="20px"
-      />
+      <NextLink href="/main">
+        <Link onClick={() => authClickHandler()}>
+          <Image
+            src="btn_strava_connectwith_orange.svg"
+            alt="Connect with STRAVA"
+            htmlWidth="290px"
+            m="auto"
+            p="20px"
+          />
+        </Link>
+      </NextLink>
     </Box>
   );
 }

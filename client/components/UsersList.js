@@ -140,7 +140,7 @@ const UsersList = (props) => {
         autoHeight
         disableSelectionOnClick
         hideFooter
-        pageSize="100"
+        pageSize={100}
         rows={rows}
         columns={columns}
         localeText={{

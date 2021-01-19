@@ -14,9 +14,16 @@ import { FiLogOut, FiInfo } from "react-icons/fi";
 import NextLink from "next/link";
 import NavLink from "./UIElements/NavLink";
 import NavIcon from "./UIElements/NavIcon";
+import AuthContext from "../context/auth-context";
+import { useContext } from "react";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const auth = useContext(AuthContext);
+
+  const authClickHandler = () => {
+    auth.logout();
+  };
 
   return (
     <Box
@@ -50,33 +57,44 @@ export default function Navbar() {
             ZPA pomáhá sportem
           </Heading>
         </Stack>
-        <Box display="flex">
-          <List display="flex">
-            <NavLink path="/main" text="úvod" />
-            <NavLink path="/ride" text="cyklo" />
-            <NavLink path="/run" text="běh" />
-            <NavLink path="/swim" text="plavání" />
-          </List>
-          <DarkMode>
-            <NextLink href="/about">
-              <Link>
-                <NavIcon as={FiInfo} label="O aplikaci" aria="About" p="7px" />
-              </Link>
-            </NextLink>
-            <NavIcon
-              label="Světlý/Tmavý mód"
-              aria="Toggle dark mode"
-              icon={{ light: <MoonIcon />, dark: <SunIcon /> }[colorMode]}
-              action={toggleColorMode}
-            />
-            <NavIcon
-              as={FiLogOut}
-              label="Odhlášení z aplikace"
-              aria="Logout"
-              p="7px"
-            />
-          </DarkMode>
-        </Box>
+        {auth.isLoggedIn && (
+          <Box display="flex">
+            <List display="flex">
+              <NavLink path="/main" text="úvod" />
+              <NavLink path="/ride" text="cyklo" />
+              <NavLink path="/run" text="běh" />
+              <NavLink path="/swim" text="plavání" />
+            </List>
+            <DarkMode>
+              <NextLink href="/about">
+                <Link>
+                  <NavIcon
+                    as={FiInfo}
+                    label="O aplikaci"
+                    aria="About"
+                    p="7px"
+                  />
+                </Link>
+              </NextLink>
+              <NavIcon
+                label="Světlý/Tmavý mód"
+                aria="Toggle dark mode"
+                icon={{ light: <MoonIcon />, dark: <SunIcon /> }[colorMode]}
+                action={toggleColorMode}
+              />
+              <NextLink href="/">
+                <Link onClick={() => authClickHandler()}>
+                  <NavIcon
+                    as={FiLogOut}
+                    label="Odhlášení z aplikace"
+                    aria="Logout"
+                    p="7px"
+                  />
+                </Link>
+              </NextLink>
+            </DarkMode>
+          </Box>
+        )}
       </Flex>
     </Box>
   );
