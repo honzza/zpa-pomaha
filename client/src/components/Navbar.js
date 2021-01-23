@@ -7,6 +7,7 @@ import {
   DarkMode,
   Image,
   Stack,
+  Link,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FiLogOut, FiInfo } from "react-icons/fi";
@@ -21,6 +22,7 @@ export default function Navbar() {
   const auth = useContext(AuthContext);
 
   const authClickHandler = () => {
+    window.open("http://localhost:5000/auth/logout", "_self");
     auth.logout();
   };
 
@@ -59,7 +61,7 @@ export default function Navbar() {
         {auth.isLoggedIn && (
           <Box display="flex">
             <List display="flex">
-              <NavLinkWrapper path="/main" text="úvod" />
+              <NavLinkWrapper path="/dashboard" text="úvod" />
               <NavLinkWrapper path="/ride" text="cyklo" />
               <NavLinkWrapper path="/run" text="běh" />
               <NavLinkWrapper path="/swim" text="plavání" />
@@ -74,14 +76,14 @@ export default function Navbar() {
                 icon={{ light: <MoonIcon />, dark: <SunIcon /> }[colorMode]}
                 action={toggleColorMode}
               />
-              <NavLink to="/" onClick={() => authClickHandler()}>
+              <Link onClick={() => authClickHandler()}>
                 <NavIcon
                   as={FiLogOut}
                   label="Odhlášení z aplikace"
                   aria="Logout"
                   p="7px"
                 />
-              </NavLink>
+              </Link>
             </DarkMode>
           </Box>
         )}

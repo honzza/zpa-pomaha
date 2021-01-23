@@ -1,14 +1,33 @@
-import { Image, Box, Text } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
-import { useContext } from "react";
+import { Image, Box, Text, Link } from "@chakra-ui/react";
 import AuthContext from "../context/auth-context";
+import { useContext } from "react";
+import { useEffect } from "react";
 
-export default function Login() {
+const Login = () => {
   const auth = useContext(AuthContext);
 
-  const authClickHandler = () => {
-    auth.login();
-  };
+  useEffect(() => {
+    fetch("http://localhost:5000/auth/login/success", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+
+        if (response.status === 200) return auth.login();
+        //response.json();
+
+        throw new Error("Failed to authenticate user");
+      })
+      .catch((err) => {
+        auth.logout();
+      });
+  });
 
   return (
     <Box w="50%" margin="auto" p="20px">
@@ -30,7 +49,11 @@ export default function Login() {
       <Text fontWeight="600" pb="20px" align="center" color="#FC4C02">
         Pokračujte prosím přihlášením do aplikace kliknutím na tlačítko níže.
       </Text>
-      <NavLink to="/main" exact onClick={() => authClickHandler()}>
+      <Link
+        onClick={() =>
+          window.open("http://localhost:5000/auth/strava", "_self")
+        }
+      >
         <Image
           src="btn_strava_connectwith_orange.svg"
           alt="Connect with STRAVA"
@@ -38,7 +61,9 @@ export default function Login() {
           m="auto"
           p="20px"
         />
-      </NavLink>
+      </Link>
     </Box>
   );
-}
+};
+
+export default Login;

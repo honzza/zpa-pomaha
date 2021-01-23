@@ -1,7 +1,29 @@
-const { Router } = require("express");
-const router = Router();
+const router = require("express").Router();
 const passport = require("passport");
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
+
+// when login is successful, retrieve user info
+router.get("/login/success", (req, res) => {
+  if (req.user) {
+    res.json({
+      success: true,
+      message: "User has successfully authenticated",
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: "User not authenticated",
+    });
+  }
+});
+
+// when login failed, send failed msg
+router.get("/login/failed", ensureGuest, (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "User failed to authenticate",
+  });
+});
 
 router.get(
   "/strava",
@@ -13,18 +35,16 @@ router.get(
   "/strava/callback",
   ensureGuest,
   passport.authenticate("strava", {
-    failureRedirect: "/error",
+    successRedirect: `${process.env.CLIENT_PATH}/dashboard`,
+    failureRedirect: "/auth/login/failed",
     failureFlash: true,
-  }),
-  (req, res) => {
-    res.redirect("/main");
-  }
+  })
 );
 
 router.get("/logout", ensureAuth, (req, res) => {
   req.logout();
   req.flash("message", "You have successfully logged out");
-  res.redirect("/logout");
+  res.redirect(`${process.env.CLIENT_PATH}/login`);
 });
 
 module.exports = router;

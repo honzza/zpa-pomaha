@@ -1,6 +1,6 @@
 import UsersList from "../components/UsersList";
 
-const Main = () => {
+const User = () => {
   const USERS = [
     {
       id: "1jdshdjsh",
@@ -33,7 +33,12 @@ const Main = () => {
       },
     },
   ];
-  return <UsersList items={USERS} />;
+
+  return (
+    <div>
+      <UsersList items={USERS} />
+    </div>
+  );
 };
 
-export default Main;
+export default User;

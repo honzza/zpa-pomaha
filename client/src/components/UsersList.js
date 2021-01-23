@@ -10,17 +10,17 @@ import { Box } from "@chakra-ui/react";
 //   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 // });
 
-const UsersList = (props) => {
-  const useStyles = makeStyles({
-    root: {
-      "& .datagrid--header": {
-        backgroundColor: "#b6b6b6",
-      },
-      "& .datagrid--cell": {},
-      backgroundColor: "#ffffff",
+const useStyles = makeStyles({
+  root: {
+    "& .datagrid--header": {
+      backgroundColor: "#b6b6b6",
     },
-  });
+    "& .datagrid--cell": {},
+    backgroundColor: "#ffffff",
+  },
+});
 
+const UsersList = (props) => {
   const classes = useStyles();
 
   if (props.items.length === 0) {

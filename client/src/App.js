@@ -9,12 +9,12 @@ import {
   Switch,
 } from "react-router-dom";
 
-import Main from "./pages/main";
+import Login from "./pages/login";
+import User from "./pages/user";
 import Ride from "./pages/ride";
 import Run from "./pages/run";
 import Swim from "./pages/swim";
 import About from "./pages/about";
-import Login from "./pages/login";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,31 +32,19 @@ function App() {
   if (isLoggedIn) {
     routes = (
       <Switch>
-        <Route path="/main" exact>
-          <Main />
-        </Route>
-        <Route path="/ride" exact>
-          <Ride />
-        </Route>
-        <Route path="/run" exact>
-          <Run />
-        </Route>
-        <Route path="/swim" exact>
-          <Swim />
-        </Route>
-        <Route path="/about" exact>
-          <About />
-        </Route>
-        <Redirect to="/main" />
+        <Route exact path="/dashboard" component={User} />
+        <Route exact path="/ride" component={Ride} />
+        <Route exact path="/run" component={Run} />
+        <Route exact path="/swim" component={Swim} />
+        <Route exact path="/about" component={About} />
+        <Redirect to="/dashboard" />
       </Switch>
     );
   } else {
     routes = (
       <Switch>
-        <Route path="/">
-          <Login />
-        </Route>
-        <Redirect to="/" />
+        <Route path="/login" component={Login} />
+        <Redirect to="/login" />
       </Switch>
     );
   }

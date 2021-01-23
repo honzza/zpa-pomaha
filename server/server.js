@@ -1,15 +1,16 @@
+const cookieSession = require("cookie-session");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 const dotenv = require("dotenv");
-const session = require("express-session");
+//const session = require("express-session");
 const morgan = require("morgan");
 const passport = require("passport");
 const HttpError = require("./models/http-error");
 const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
 const { ensureAuth, ensureGuest } = require("./middleware/auth");
-const MongoStore = require("connect-mongo")(session);
 
 // Config
 dotenv.config({ path: "./config/config.env" });
@@ -17,40 +18,42 @@ const PORT = process.env.PORT || 5000;
 require("./config/passport")(passport);
 const connectDB = require("./config/db");
 
+// Set response headers
+app.use(
+  cors({
+    origin: process.env.CLIENT_PATH,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
+
 // Logger
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(cookieParser("keyboard cat"));
-app.use(flash());
-
 // Sessions
 app.use(
-  session({
-    secret: "zetpik pomaha",
-    resave: false,
-    saveUninitialized: false,
-    //cookie: { maxAge: 60000 },
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  cookieSession({
+    name: "session",
+    keys: [process.env.COOKIE_KEY],
+    maxAge: 24 * 60 * 60 * 100,
   })
 );
+app.use(cookieParser());
+
+app.use(flash());
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes definition
+
 app.use("/auth", require("./routes/auth-routes"));
-app.use("/main", ensureAuth, require("./routes/users-routes"));
+app.use("/user", ensureAuth, require("./routes/users-routes"));
 app.use("/update", ensureAuth, require("./routes/stravaupdate-routes"));
 app.use("/activity", ensureAuth, require("./routes/activities-routes"));
-app.use("/logout", ensureGuest, (req, res) => {
-  res.json({ message: req.flash("message")[0] });
-});
-app.use("/error", (req, res) => {
-  res.json({ error: req.flash("error")[0] });
-});
 
 // Unknown route error
 app.use((req, res, next) => {
