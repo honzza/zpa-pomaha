@@ -3,7 +3,7 @@ import UsersList from "../components/UsersList";
 
 const User = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  //  const [error, setError] = useState();
   const [loadedUsers, setLoadedUsers] = useState();
 
   useEffect(() => {
@@ -22,7 +22,8 @@ const User = () => {
             throw new Error(responseData.message);
           }
         } catch (err) {
-          setError(err.message);
+          console.log(err);
+          // setError(err.message);
         }
         setIsLoading(false);
       };
@@ -50,16 +51,17 @@ const User = () => {
         }
         setLoadedUsers(responseData.users);
       } catch (err) {
-        setError(err.message);
+        console.log(err);
+        // setError(err.message);
       }
       setIsLoading(false);
     };
     sendRequest();
   }, []);
 
-  const errorHandler = () => {
-    setError(null);
-  };
+  // const errorHandler = () => {
+  //   setError(null);
+  // };
 
   return (
     <div>{!isLoading && loadedUsers && <UsersList items={loadedUsers} />}</div>

@@ -1,10 +1,10 @@
 import { Image, Box, Text, Link } from "@chakra-ui/react";
 import AuthContext from "../context/auth-context";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 const Login = () => {
   const auth = useContext(AuthContext);
-  const [error, setError] = useState();
+  //  const [error, setError] = useState();
 
   useEffect(() => {
     //předělat podle usera
@@ -23,8 +23,8 @@ const Login = () => {
         throw new Error("Failed to authenticate user");
       })
       .catch((err) => {
-        setError(err.message || "Something went wrong, please try again");
-
+        //       setError(err.message || "Something went wrong, please try again");
+        console.log(err);
         auth.logout();
       });
   }, [auth]);
