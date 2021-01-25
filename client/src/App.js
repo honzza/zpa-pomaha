@@ -1,7 +1,7 @@
 //import './App.css';
 import Layout from "./components/Layout";
 import AuthContext from "./context/auth-context";
-import { useState, useCallback } from "react";
+import React, { useState, useCallback, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -9,12 +9,12 @@ import {
   Switch,
 } from "react-router-dom";
 
-import Login from "./pages/login";
-import User from "./pages/user";
-import Ride from "./pages/ride";
-import Run from "./pages/run";
-import Swim from "./pages/swim";
-import About from "./pages/about";
+const Login = React.lazy(() => import("./pages/login"));
+const User = React.lazy(() => import("./pages/user"));
+const Ride = React.lazy(() => import("./pages/ride"));
+const Run = React.lazy(() => import("./pages/run"));
+const Swim = React.lazy(() => import("./pages/swim"));
+const About = React.lazy(() => import("./pages/about"));
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,7 +55,9 @@ function App() {
     >
       <Router>
         <Layout>
-          <main>{routes}</main>
+          <main>
+            <Suspense fallback={<h1>Loading...</h1>}>{routes}</Suspense>
+          </main>
         </Layout>
       </Router>
     </AuthContext.Provider>

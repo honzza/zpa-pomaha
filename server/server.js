@@ -1,22 +1,34 @@
-const cookieSession = require("cookie-session");
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
-//const session = require("express-session");
-const morgan = require("morgan");
-const passport = require("passport");
-const HttpError = require("./models/http-error");
-const flash = require("connect-flash");
+const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const cors = require("cors");
+
+const morgan = require("morgan");
+const flash = require("connect-flash");
+
 const { ensureAuth, ensureGuest } = require("./middleware/auth");
+const HttpError = require("./models/http-error");
 
 // Config
-dotenv.config({ path: "./config/config.env" });
 const PORT = process.env.PORT || 5000;
-require("./config/passport")(passport);
 const connectDB = require("./config/db");
+require("./config/passport")(passport);
+
+// Sessions
+app.use(cookieParser(process.env.COOKIE_KEY));
+app.use(
+  cookieSession({
+    name: "session",
+    secret: process.env.COOKIE_KEY,
+    maxAge: 24 * 60 * 60 * 100,
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Set response headers
 app.use(
@@ -31,29 +43,13 @@ app.use(
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-
-// Sessions
-app.use(
-  cookieSession({
-    name: "session",
-    keys: [process.env.COOKIE_KEY],
-    maxAge: 24 * 60 * 60 * 100,
-  })
-);
-app.use(cookieParser());
-
 app.use(flash());
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Routes definition
-
 app.use("/auth", require("./routes/auth-routes"));
-app.use("/user", ensureAuth, require("./routes/users-routes"));
-app.use("/update", ensureAuth, require("./routes/stravaupdate-routes"));
-app.use("/activity", ensureAuth, require("./routes/activities-routes"));
+app.use("/api/user", ensureAuth, require("./routes/users-routes"));
+app.use("/api/update", ensureAuth, require("./routes/stravaupdate-routes"));
+app.use("/api/activity", ensureAuth, require("./routes/activities-routes"));
 
 // Unknown route error
 app.use((req, res, next) => {

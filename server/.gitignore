@@ -145,4 +145,4 @@ tools/*/*.i.tmp
 __pycache__
 .DS_Store
 *~
-config/config.env
+nodemon.json

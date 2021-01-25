@@ -1,33 +1,33 @@
 import { Image, Box, Text, Link } from "@chakra-ui/react";
 import AuthContext from "../context/auth-context";
-import { useContext } from "react";
-import { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const Login = () => {
   const auth = useContext(AuthContext);
+  const [error, setError] = useState();
 
   useEffect(() => {
-    fetch("http://localhost:5000/auth/login/success", {
-      method: "GET",
+    //předělat podle usera
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`, {
       credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-      },
     })
       .then((response) => {
-        console.log(response);
-
-        if (response.status === 200) return auth.login();
-        //response.json();
-
+        if (response.status === 200) {
+          fetch(`${process.env.REACT_APP_BACKEND_PATH}/api/update`, {
+            credentials: "include",
+          });
+          auth.login();
+          //response.json();
+          return;
+        }
         throw new Error("Failed to authenticate user");
       })
       .catch((err) => {
+        setError(err.message || "Something went wrong, please try again");
+
         auth.logout();
       });
-  });
+  }, [auth]);
 
   return (
     <Box w="50%" margin="auto" p="20px">
@@ -50,9 +50,12 @@ const Login = () => {
         Pokračujte prosím přihlášením do aplikace kliknutím na tlačítko níže.
       </Text>
       <Link
-        onClick={() =>
-          window.open("http://localhost:5000/auth/strava", "_self")
-        }
+        onClick={() => {
+          window.open(
+            `${process.env.REACT_APP_BACKEND_PATH}/auth/strava`,
+            "_self"
+          );
+        }}
       >
         <Image
           src="btn_strava_connectwith_orange.svg"

@@ -22,7 +22,7 @@ export default function Navbar() {
   const auth = useContext(AuthContext);
 
   const authClickHandler = () => {
-    window.open("http://localhost:5000/auth/logout", "_self");
+    window.open(`${process.env.REACT_APP_BACKEND_PATH}/auth/logout`, "_self");
     auth.logout();
   };
 
