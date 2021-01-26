@@ -1,7 +1,11 @@
 const express = require("express");
 const app = express();
-const cookieSession = require("cookie-session");
+// const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
+
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+
 const passport = require("passport");
 const cors = require("cors");
 
@@ -18,11 +22,21 @@ require("./config/passport")(passport);
 
 // Sessions
 app.use(cookieParser(process.env.COOKIE_KEY));
+// app.use(
+//   cookieSession({
+//     name: "session",
+//     secret: process.env.COOKIE_KEY,
+//     maxAge: 24 * 60 * 60 * 100,
+//   })
+// );
+
 app.use(
-  cookieSession({
-    name: "session",
+  session({
     secret: process.env.COOKIE_KEY,
-    maxAge: 24 * 60 * 60 * 100,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 24 * 60 * 60 * 100 },
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
