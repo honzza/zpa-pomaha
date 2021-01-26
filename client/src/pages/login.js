@@ -1,11 +1,42 @@
 import { Image, Box, Text, Link } from "@chakra-ui/react";
-//import AuthContext from "../context/auth-context";
-//import React, { useContext, useEffect } from "react";
+import AuthContext from "../context/auth-context";
+import React, { useContext, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 
 const Login = () => {
-  // const auth = useContext(AuthContext);
   //  const [error, setError] = useState();
   //const [isLoading, setIsLoading] = useState(false);
+  const auth = useContext(AuthContext);
+
+  useEffect(() => {
+    const sendRequest = async () => {
+      //setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`,
+          {
+            credentials: "include",
+          }
+        );
+        const responseData = await response.json();
+        if (response.status === 200) {
+          auth.login();
+          return <Redirect to="/dashboard" />;
+        }
+        throw new Error(responseData.message);
+      } catch (err) {
+        console.log(err);
+        // setError(err.message || "Something went wrong, please try again");
+        return auth.logout();
+      }
+      //setIsLoading(false);
+
+      // fetch(`${process.env.REACT_APP_BACKEND_PATH}/api/update`, {
+      //   credentials: "include",
+      // });
+    };
+    sendRequest();
+  }, []);
 
   return (
     <Box w="50%" margin="auto" p="20px">
