@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import UsersList from "../components/UsersList";
+//import AuthContext from "../context/auth-context";
 
 const User = () => {
   const [isLoading, setIsLoading] = useState(false);
   //  const [error, setError] = useState();
   const [loadedUsers, setLoadedUsers] = useState();
+  //const auth = useContext(AuthContext);
 
   useEffect(() => {
     if (new Date().getMinutes() % 5 === 0) {

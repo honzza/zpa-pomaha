@@ -1,33 +1,11 @@
 import { Image, Box, Text, Link } from "@chakra-ui/react";
-import AuthContext from "../context/auth-context";
-import React, { useContext, useEffect } from "react";
+//import AuthContext from "../context/auth-context";
+//import React, { useContext, useEffect } from "react";
 
 const Login = () => {
-  const auth = useContext(AuthContext);
+  // const auth = useContext(AuthContext);
   //  const [error, setError] = useState();
-
-  useEffect(() => {
-    //předělat podle usera
-    fetch(`${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`, {
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          fetch(`${process.env.REACT_APP_BACKEND_PATH}/api/update`, {
-            credentials: "include",
-          });
-          auth.login();
-          //response.json();
-          return;
-        }
-        throw new Error("Failed to authenticate user");
-      })
-      .catch((err) => {
-        //       setError(err.message || "Something went wrong, please try again");
-        console.log(err);
-        auth.logout();
-      });
-  }, [auth]);
+  //const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Box w="50%" margin="auto" p="20px">

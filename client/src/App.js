@@ -1,7 +1,7 @@
 //import './App.css';
 import Layout from "./components/Layout";
 import AuthContext from "./context/auth-context";
-import React, { useState, useCallback, Suspense } from "react";
+import React, { useState, useCallback, Suspense, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -29,6 +29,34 @@ function App() {
 
   let routes;
 
+  useEffect(() => {
+    const sendRequest = async () => {
+      //setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`,
+          { credentials: "include" }
+        );
+        const responseData = await response.json();
+        if (response.status === 200) {
+          return setIsLoggedIn(true);
+        }
+        throw new Error(responseData.message);
+      } catch (err) {
+        console.log(err);
+        // setError(err.message || "Something went wrong, please try again");
+        return setIsLoggedIn(false);
+      }
+      //setIsLoading(false);
+    };
+
+    // fetch(`${process.env.REACT_APP_BACKEND_PATH}/api/update`, {
+    //   credentials: "include",
+    // });
+    console.log(isLoggedIn);
+    sendRequest();
+  }, []);
+
   if (isLoggedIn) {
     routes = (
       <Switch>
@@ -43,7 +71,7 @@ function App() {
   } else {
     routes = (
       <Switch>
-        <Route path="/login" component={Login} />
+        <Route exact path="/login" component={Login} />
         <Redirect to="/login" />
       </Switch>
     );
