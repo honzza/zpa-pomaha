@@ -14,11 +14,10 @@ const Login = () => {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`,
-          {
-            credentials: "include",
-          }
+          { credentials: "include" }
         );
         const responseData = await response.json();
+        console.log(responseData);
         if (responseData.success === true) {
           auth.login();
           console.log(responseData);
