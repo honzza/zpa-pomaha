@@ -3,7 +3,7 @@ const app = express();
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
-const cors = require("cors");
+//const cors = require("cors");
 
 const morgan = require("morgan");
 const flash = require("connect-flash");
@@ -11,19 +11,30 @@ const flash = require("connect-flash");
 const { ensureAuth, ensureGuest } = require("./middleware/auth");
 const HttpError = require("./models/http-error");
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+  next();
+});
+
 // Config
 const PORT = process.env.PORT || 5000;
 const connectDB = require("./config/db");
 require("./config/passport")(passport);
 
 // Set response headers
-app.use(
-  cors({
-    origin: process.env.CLIENT_PATH,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_PATH,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     credentials: true,
+//   })
+// );
 
 // Sessions
 app.use(cookieParser(process.env.COOKIE_KEY));
