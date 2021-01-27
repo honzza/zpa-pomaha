@@ -23,8 +23,7 @@ app.use(
     name: "session",
     keys: [process.env.COOKIE_KEY],
     maxAge: 86400000,
-    sameSite: "none",
-    secure: true,
+    httpOnly: true,
   })
 );
 
