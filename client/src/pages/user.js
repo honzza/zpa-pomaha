@@ -20,7 +20,7 @@ const User = () => {
             }
           );
           const responseData = await response.json();
-          if (!response.ok) {
+          if (responseData.success === false) {
             throw new Error(responseData.message);
           }
         } catch (err) {
@@ -48,7 +48,7 @@ const User = () => {
           }
         );
         const responseData = await response.json();
-        if (!response.ok) {
+        if (responseData.success === false) {
           throw new Error(responseData.message);
         }
         setLoadedUsers(responseData.users);

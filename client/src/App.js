@@ -27,28 +27,6 @@ function App() {
     setIsLoggedIn(false);
   }, []);
 
-  let routes;
-
-  if (isLoggedIn) {
-    routes = (
-      <Switch>
-        <Route exact path="/dashboard" component={User} />
-        <Route exact path="/ride" component={Ride} />
-        <Route exact path="/run" component={Run} />
-        <Route exact path="/swim" component={Swim} />
-        <Route exact path="/about" component={About} />
-        <Redirect to="/dashboard" />
-      </Switch>
-    );
-  } else {
-    routes = (
-      <Switch>
-        <Route exact path="/login" component={Login} />
-        <Redirect to="/login" />
-      </Switch>
-    );
-  }
-
   return (
     <AuthContext.Provider
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
@@ -56,7 +34,22 @@ function App() {
       <Router>
         <Layout>
           <main>
-            <Suspense fallback={<h1>Loading...</h1>}>{routes}</Suspense>
+            <Suspense fallback={<h1>Loading...</h1>}>
+              <Switch>
+                {isLoggedIn && (
+                  <Switch>
+                    <Route exact path="/dashboard" component={User} />
+                    <Route exact path="/ride" component={Ride} />
+                    <Route exact path="/run" component={Run} />
+                    <Route exact path="/swim" component={Swim} />
+                    <Route exact path="/about" component={About} />
+                    <Redirect to="/dashboard" />
+                  </Switch>
+                )}
+                <Route exact path="/login" component={Login} />
+                <Redirect to="/login" />
+              </Switch>
+            </Suspense>
           </main>
         </Layout>
       </Router>

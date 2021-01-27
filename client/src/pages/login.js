@@ -19,8 +19,9 @@ const Login = () => {
           }
         );
         const responseData = await response.json();
-        if (response.status === 200) {
+        if (responseData.success === true) {
           auth.login();
+          console.log(responseData);
           return <Redirect to="/dashboard" />;
         }
         throw new Error(responseData.message);
