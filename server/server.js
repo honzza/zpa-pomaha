@@ -16,20 +16,6 @@ const PORT = process.env.PORT || 5000;
 const connectDB = require("./config/db");
 require("./config/passport")(passport);
 
-// Sessions
-app.use(cookieParser(process.env.COOKIE_KEY));
-app.use(
-  cookieSession({
-    name: "session",
-    secret: process.env.COOKIE_KEY,
-    maxAge: 24 * 60 * 60 * 100,
-  })
-);
-
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Set response headers
 app.use(
   cors({
@@ -38,6 +24,20 @@ app.use(
     credentials: true,
   })
 );
+
+// Sessions
+app.use(cookieParser(process.env.COOKIE_KEY));
+app.use(
+  cookieSession({
+    name: "session",
+    secret: process.env.COOKIE_KEY,
+    maxAge: 86400000,
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Logger
 if (process.env.NODE_ENV === "development") {
