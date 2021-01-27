@@ -14,13 +14,21 @@ const Login = () => {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`,
-          { credentials: "include" }
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Credentials": true,
+            },
+          }
         );
         const responseData = await response.json();
         console.log(responseData);
         if (responseData.success === true) {
           auth.login();
-          console.log(responseData);
+          console.log("jsem zde!");
           return <Redirect to="/dashboard" />;
         }
         throw new Error(responseData.message);

@@ -16,7 +16,13 @@ const User = () => {
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_PATH}/api/update`,
             {
+              method: "GET",
               credentials: "include",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+              },
             }
           );
           const responseData = await response.json();
@@ -40,11 +46,13 @@ const User = () => {
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_PATH}/api/user`,
           {
+            method: "GET",
             credentials: "include",
-            //headers: {
-            // Accept: "application/json",
-            //"Access-Control-Allow-Credentials": true,
-            //},
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Credentials": true,
+            },
           }
         );
         const responseData = await response.json();

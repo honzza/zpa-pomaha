@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cookieSession = require("cookie-session");
+const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
@@ -16,27 +17,29 @@ const PORT = process.env.PORT || 5000;
 const connectDB = require("./config/db");
 require("./config/passport")(passport);
 
-// Set response headers
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-
-// Sessions
-app.use(cookieParser(process.env.COOKIE_KEY));
+// Set session cookies
 app.use(
   cookieSession({
     name: "session",
-    secret: process.env.COOKIE_KEY,
+    keys: [process.env.COOKIE_KEY],
     maxAge: 86400000,
   })
 );
 
+app.use(cookieParser());
+
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Set up cors
+app.use(
+  cors({
+    origin: process.env.CLIENT_PATH,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 
 // Logger
 if (process.env.NODE_ENV === "development") {
