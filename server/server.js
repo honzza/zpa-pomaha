@@ -18,12 +18,14 @@ const connectDB = require("./config/db");
 require("./config/passport")(passport);
 
 // Set session cookies
+app.set("trust proxy", 1);
 app.use(
   cookieSession({
     name: "session",
     keys: [process.env.COOKIE_KEY],
     maxAge: 86400000,
-    httpOnly: false,
+    sameSite: "none",
+    secure: true,
   })
 );
 
