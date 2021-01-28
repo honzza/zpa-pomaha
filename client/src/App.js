@@ -8,6 +8,7 @@ import {
   Redirect,
   Switch,
 } from "react-router-dom";
+import LoadingSpinner from "./components/UIElements/LoadingSpinner";
 
 const Login = React.lazy(() => import("./pages/login"));
 const User = React.lazy(() => import("./pages/user"));
@@ -34,7 +35,7 @@ function App() {
       <Router>
         <Layout>
           <main>
-            <Suspense fallback={<h1>Loading...</h1>}>
+            <Suspense fallback={<LoadingSpinner />}>
               <Switch>
                 {isLoggedIn && (
                   <Switch>

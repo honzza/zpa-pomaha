@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cookieSession = require("cookie-session");
-const session = require("express-session");
+// const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
@@ -18,16 +18,26 @@ const connectDB = require("./config/db");
 require("./config/passport")(passport);
 
 // Set session cookies
-app.set("trust proxy", 1);
-app.use(
-  cookieSession({
-    name: "session",
-    keys: [process.env.COOKIE_KEY],
-    maxAge: 86400000,
-    sameSite: "none",
-    secure: true,
-  })
-);
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+  app.use(
+    cookieSession({
+      name: "session",
+      keys: [process.env.COOKIE_KEY],
+      maxAge: 86400000,
+      sameSite: "none",
+      secure: true,
+    })
+  );
+} else {
+  app.use(
+    cookieSession({
+      name: "session",
+      keys: [process.env.COOKIE_KEY],
+      maxAge: 86400000,
+    })
+  );
+}
 
 app.use(cookieParser());
 

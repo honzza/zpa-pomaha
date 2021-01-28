@@ -35,7 +35,7 @@ router.get(
   "/strava/callback",
   ensureGuest,
   passport.authenticate("strava", {
-    successRedirect: `${process.env.CLIENT_PATH}/login`,
+    successRedirect: `${process.env.CLIENT_PATH}`,
     failureRedirect: "/auth/login/failed",
     failureFlash: true,
   })

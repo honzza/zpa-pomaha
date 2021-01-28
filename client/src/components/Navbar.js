@@ -1,5 +1,5 @@
 import {
-  List,
+  // List,
   Box,
   Flex,
   Heading,
@@ -10,8 +10,8 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { FiLogOut, FiInfo } from "react-icons/fi";
-import NavLinkWrapper from "./UIElements/NavLinkWrapper";
+import { FiLogOut, FiInfo, FiHome } from "react-icons/fi";
+//import NavLinkWrapper from "./UIElements/NavLinkWrapper";
 import NavIcon from "./UIElements/NavIcon";
 import AuthContext from "../context/auth-context";
 import { useContext } from "react";
@@ -20,11 +20,6 @@ import { NavLink } from "react-router-dom";
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const auth = useContext(AuthContext);
-
-  const authClickHandler = () => {
-    window.open(`${process.env.REACT_APP_BACKEND_PATH}/auth/logout`, "_self");
-    auth.logout();
-  };
 
   return (
     <Box
@@ -60,13 +55,15 @@ export default function Navbar() {
         </Stack>
         {auth.isLoggedIn && (
           <Box display="flex">
-            <List display="flex">
-              <NavLinkWrapper path="/dashboard" text="úvod" />
+            {/* <List display="flex">
               <NavLinkWrapper path="/ride" text="cyklo" />
               <NavLinkWrapper path="/run" text="běh" />
               <NavLinkWrapper path="/swim" text="plavání" />
-            </List>
+            </List> */}
             <DarkMode>
+              <NavLink to="/dashboard">
+                <NavIcon as={FiHome} label="Úvod" aria="Dashboard" p="7px" />
+              </NavLink>
               <NavLink to="/about">
                 <NavIcon as={FiInfo} label="O aplikaci" aria="About" p="7px" />
               </NavLink>
@@ -76,7 +73,15 @@ export default function Navbar() {
                 icon={{ light: <MoonIcon />, dark: <SunIcon /> }[colorMode]}
                 action={toggleColorMode}
               />
-              <Link onClick={() => authClickHandler()}>
+              <Link
+                onClick={() => {
+                  window.open(
+                    `${process.env.REACT_APP_BACKEND_PATH}/auth/logout`,
+                    "_self"
+                  );
+                  auth.logout();
+                }}
+              >
                 <NavIcon
                   as={FiLogOut}
                   label="Odhlášení z aplikace"
