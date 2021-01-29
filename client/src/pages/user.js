@@ -1,43 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import UsersList from "../components/UsersList";
-import AuthContext from "../context/auth-context";
+import LoadingSpinner from "../components/UIElements/LoadingSpinner";
 
 const User = () => {
   const [isLoading, setIsLoading] = useState(false);
   //  const [error, setError] = useState();
   const [loadedUsers, setLoadedUsers] = useState();
-  const auth = useContext(AuthContext);
-
-  useEffect(() => {
-    if (new Date().getMinutes() % 5 === 0) {
-      const sendRequest = async () => {
-        setIsLoading(true);
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_BACKEND_PATH}/api/update`,
-            {
-              method: "GET",
-              credentials: "include",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-              },
-            }
-          );
-          const responseData = await response.json();
-          if (responseData.success === false) {
-            throw new Error(responseData.message);
-          }
-        } catch (err) {
-          console.log(err);
-          // setError(err.message);
-        }
-        setIsLoading(false);
-      };
-      sendRequest();
-    }
-  }, []);
 
   useEffect(() => {
     const sendRequest = async () => {
@@ -60,13 +28,13 @@ const User = () => {
           throw new Error(responseData.message);
         }
         setLoadedUsers(responseData.users);
+        setIsLoading(false);
       } catch (err) {
+        setIsLoading(false);
         console.log(err);
         // setError(err.message);
       }
-      setIsLoading(false);
     };
-    console.log(auth.isLoggedIn);
     sendRequest();
   }, []);
 
@@ -75,7 +43,10 @@ const User = () => {
   // };
 
   return (
-    <div>{!isLoading && loadedUsers && <UsersList items={loadedUsers} />}</div>
+    <div>
+      {isLoading && <LoadingSpinner />}
+      {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
+    </div>
   );
 };
 
