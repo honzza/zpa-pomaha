@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const morgan = require("morgan");
 const flash = require("connect-flash");
+const bodyParser = require("body-parser");
 
 const { ensureAuth, ensureGuest } = require("./middleware/auth");
 const HttpError = require("./models/http-error");
@@ -59,11 +60,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 app.use(flash());
+app.use(bodyParser.json());
 
 // Routes definition
 app.use("/auth", require("./routes/auth-routes"));
 app.use("/api/user", ensureAuth, require("./routes/users-routes"));
-app.use("/api/update", ensureAuth, require("./routes/stravaupdate-routes"));
+app.use("/api/update", require("./routes/stravaupdate-routes"));
 app.use("/api/activity", ensureAuth, require("./routes/activities-routes"));
 
 // Unknown route error
