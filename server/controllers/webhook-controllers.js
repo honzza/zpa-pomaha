@@ -3,7 +3,7 @@ const WebHook = require("../models/web-hook");
 
 const createSubscription = async (req, res, next) => {
   // Your verify token. Should be a random string.
-  const VERIFY_TOKEN = proces.env.VERIFY_TOKEN;
+  const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
   // Parses the query params
   let mode = req.query["hub.mode"];
   let token = req.query["hub.verify_token"];
