@@ -5,8 +5,8 @@ const getUsers = async (req, res, next) => {
   let users;
   try {
     users = await User.find(
-      {},
-      "-uid -shortlivedATC -refreshTC -expirationATC -scope -_id -createdAt -updatedAt"
+      { active: true },
+      "-uid -shortlivedATC -refreshTC -expirationATC -scope -_id -createdAt -updatedAt -active"
     );
   } catch (err) {
     return next(

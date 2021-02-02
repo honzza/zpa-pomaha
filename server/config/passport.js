@@ -22,6 +22,7 @@ module.exports = function (passport) {
           uid: profile.id,
           firstname: profile.name.first,
           lastname: profile.name.last,
+          avatar: profile.avatar,
           shortlivedATC: accessToken,
           expirationATC: Date.now(),
           refreshTC: refreshToken,
@@ -30,9 +31,10 @@ module.exports = function (passport) {
             ride: { m: 0, kc: 0 },
             run: { m: 0, kc: 0 },
             swim: { m: 0, kc: 0 },
+            nski: { m: 0, kc: 0 },
           },
+          active: true,
         };
-
         // Check if logging athlete is member of selected club
         try {
           let clubMember = await axios.get(

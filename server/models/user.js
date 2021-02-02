@@ -5,6 +5,7 @@ const userSchema = new Schema({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   uid: { type: Number, required: true },
+  avatar: { type: String, required: false },
   shortlivedATC: { type: String, required: true },
   expirationATC: { type: Date, required: true },
   refreshTC: { type: String, required: true },
@@ -22,9 +23,14 @@ const userSchema = new Schema({
       m: { type: Number, required: false },
       kc: { type: Number, required: false },
     },
+    nski: {
+      m: { type: Number, required: false },
+      kc: { type: Number, required: false },
+    },
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  active: { type: Boolean, required: true },
 });
 
 module.exports = mongoose.model("User", userSchema);

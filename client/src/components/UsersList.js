@@ -36,7 +36,10 @@ const UsersList = (props) => {
     return {
       ...user,
       kcTotal:
-        user.activity.ride.kc + user.activity.swim.kc + user.activity.run.kc,
+        user.activity.ride.kc +
+        user.activity.swim.kc +
+        user.activity.run.kc +
+        user.activity.nski.kc,
     };
   });
   const resultsSorted = results.sort((a, b) => b.kcTotal - a.kcTotal);
@@ -52,9 +55,11 @@ const UsersList = (props) => {
       run: Math.round(user.activity.run.m / 100) / 10,
       ride: Math.round(user.activity.ride.m / 100) / 10,
       swim: Math.round(user.activity.swim.m / 100) / 10,
+      nski: Math.round(user.activity.nski.m / 100) / 10,
       runKc: Math.round(user.activity.run.kc),
       rideKc: Math.round(user.activity.ride.kc),
       swimKc: Math.round(user.activity.swim.kc),
+      nskiKc: Math.round(user.activity.nski.kc),
       kcTotal: Math.round(user.kcTotal),
     };
   });
@@ -63,8 +68,8 @@ const UsersList = (props) => {
   const columns = [
     {
       field: "id",
-      headerName: "Pořadí",
-      width: 95,
+      headerName: "#",
+      width: 60,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
     },
@@ -104,6 +109,13 @@ const UsersList = (props) => {
       cellClassName: "datagrid--cell",
     },
     {
+      field: "nski",
+      headerName: "Běžky/km",
+      width: 115,
+      headerClassName: "datagrid--header",
+      cellClassName: "datagrid--cell",
+    },
+    {
       field: "runKc",
       headerName: "Běh/Kč",
       width: 105,
@@ -125,6 +137,13 @@ const UsersList = (props) => {
       cellClassName: "datagrid--cell",
     },
     {
+      field: "nskiKc",
+      headerName: "Běžky/Kč",
+      width: 115,
+      headerClassName: "datagrid--header",
+      cellClassName: "datagrid--cell",
+    },
+    {
       field: "kcTotal",
       headerName: "Celkem/Kč",
       width: 125,
@@ -134,7 +153,7 @@ const UsersList = (props) => {
   ];
 
   return (
-    <Box maxW="1230px" h="63vh" mx="auto" my="20px">
+    <Box maxW="1425px" h="63vh" mx="auto" my="20px">
       <DataGrid
         className={classes.root}
         autoHeight
