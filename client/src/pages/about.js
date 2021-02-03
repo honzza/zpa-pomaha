@@ -1,5 +1,9 @@
-import { Text } from "@chakra-ui/react";
+import { Image, Flex } from "@chakra-ui/react";
 
 export default function About() {
-  return <Text my="10px">o aplikaci</Text>;
+  return (
+    <Flex justify="center">
+      <Image src="mern.jpeg" alt="MERN" htmlWidth="250px" my="20px" />
+    </Flex>
+  );
 }

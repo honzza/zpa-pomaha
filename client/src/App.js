@@ -65,7 +65,7 @@ function App() {
     sendRequest();
   }, []);
 
-  // Update tokens and activities
+  // Update activity stats
   useEffect(() => {
     const sendRequest = async () => {
       setIsLoading(true);

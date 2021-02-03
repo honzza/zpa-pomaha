@@ -22,6 +22,7 @@ module.exports = function (passport) {
           uid: profile.id,
           firstname: profile.name.first,
           lastname: profile.name.last,
+          displayname: profile.displayName,
           avatar: profile.avatar,
           shortlivedATC: accessToken,
           expirationATC: Date.now(),

@@ -1,6 +1,14 @@
 import { DataGrid } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Avatar,
+  Tag,
+  Flex,
+  StatNumber,
+  Stat,
+  useColorModeValue,
+} from "@chakra-ui/react";
 //import { csCZ } from '@material-ui/core/locale';
 
 // const formatter = new Intl.NumberFormat("cs-CZ", {
@@ -14,13 +22,15 @@ const useStyles = makeStyles({
   root: {
     "& .datagrid--header": {
       backgroundColor: "#b6b6b6",
+      //color: "#666666",
     },
     "& .datagrid--cell": {},
-    backgroundColor: "#ffffff",
+    //backgroundColor: "#ffffff",
   },
 });
 
 const UsersList = (props) => {
+  const modeColor = useColorModeValue("gray.900", "gray.300");
   const classes = useStyles();
 
   if (props.items.length === 0) {
@@ -50,16 +60,24 @@ const UsersList = (props) => {
     i++;
     return {
       id: i,
-      firstName: user.firstname,
-      lastName: user.lastname,
-      run: Math.round(user.activity.run.m / 100) / 10,
-      ride: Math.round(user.activity.ride.m / 100) / 10,
-      swim: Math.round(user.activity.swim.m / 100) / 10,
-      nski: Math.round(user.activity.nski.m / 100) / 10,
-      runKc: Math.round(user.activity.run.kc),
-      rideKc: Math.round(user.activity.ride.kc),
-      swimKc: Math.round(user.activity.swim.kc),
-      nskiKc: Math.round(user.activity.nski.kc),
+      avatar: { url: user.avatar, name: user.displayname },
+      displayName: user.displayname,
+      run: {
+        km: Math.round(user.activity.run.m / 100) / 10,
+        kc: Math.round(user.activity.run.kc),
+      },
+      ride: {
+        km: Math.round(user.activity.ride.m / 100) / 10,
+        kc: Math.round(user.activity.ride.kc),
+      },
+      swim: {
+        km: Math.round(user.activity.swim.m / 100) / 10,
+        kc: Math.round(user.activity.swim.kc),
+      },
+      nski: {
+        km: Math.round(user.activity.nski.m / 100) / 10,
+        kc: Math.round(user.activity.nski.kc),
+      },
       kcTotal: Math.round(user.kcTotal),
     };
   });
@@ -72,91 +90,111 @@ const UsersList = (props) => {
       width: 60,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
     },
     {
-      field: "firstName",
-      headerName: "Jméno",
-      width: 150,
+      field: "avatar",
+      headerName: ":)",
+      width: 80,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => (
+        <Box mt={3}>
+          <Avatar src={params.value.url} name={params.value.name} />
+        </Box>
+      ),
     },
     {
-      field: "lastName",
-      headerName: "Příjmení",
-      width: 173,
+      field: "displayName",
+      headerName: "Sportovec",
+      width: 200,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
     },
+
     {
       field: "run",
-      headerName: "Běh/km",
-      width: 105,
+      headerName: "Běh",
+      width: 180,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => (
+        <Flex direction="column">
+          <Tag mb={1}>{params.value.km} km</Tag>
+          <Tag variant="outline" colorScheme="blue">
+            {params.value.kc} Kč
+          </Tag>
+        </Flex>
+      ),
     },
     {
       field: "ride",
-      headerName: "Cyklo/km",
-      width: 115,
+      headerName: "Cyklo",
+      width: 180,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => (
+        <Flex direction="column">
+          <Tag mb={1}>{params.value.km} km</Tag>
+          <Tag variant="outline" colorScheme="blue">
+            {params.value.kc} Kč
+          </Tag>
+        </Flex>
+      ),
     },
     {
       field: "swim",
-      headerName: "Plavání/km",
-      width: 125,
+      headerName: "Plavání",
+      width: 180,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => (
+        <Flex direction="column">
+          <Tag mb={1}>{params.value.km} km</Tag>
+          <Tag variant="outline" colorScheme="blue">
+            {params.value.kc} Kč
+          </Tag>
+        </Flex>
+      ),
     },
     {
       field: "nski",
-      headerName: "Běžky/km",
-      width: 115,
+      headerName: "Běžky",
+      width: 180,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
-    },
-    {
-      field: "runKc",
-      headerName: "Běh/Kč",
-      width: 105,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-    },
-    {
-      field: "rideKc",
-      headerName: "Cyklo/Kč",
-      width: 110,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-    },
-    {
-      field: "swimKc",
-      headerName: "Plavání/Kč",
-      width: 125,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-    },
-    {
-      field: "nskiKc",
-      headerName: "Běžky/Kč",
-      width: 115,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
+      renderCell: (params) => (
+        <Flex direction="column">
+          <Tag mb={1}>{params.value.km} km</Tag>
+          <Tag variant="outline" colorScheme="blue">
+            {params.value.kc} Kč
+          </Tag>
+        </Flex>
+      ),
     },
     {
       field: "kcTotal",
-      headerName: "Celkem/Kč",
-      width: 125,
+      headerName: "Celkem",
+      width: 168,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
+      renderCell: (params) => (
+        <Flex justify="center" color={modeColor}>
+          <Stat>
+            <StatNumber>{params.value} Kč</StatNumber>
+          </Stat>
+        </Flex>
+      ),
     },
   ];
 
   return (
-    <Box maxW="1425px" h="63vh" mx="auto" my="20px">
+    <Box maxW="1230px" h="59vh" mx="auto" my="20px">
       <DataGrid
         className={classes.root}
         autoHeight
+        rowHeight={60}
         disableSelectionOnClick
         hideFooter
         pageSize={100}
