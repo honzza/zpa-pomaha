@@ -190,14 +190,15 @@ const UsersList = (props) => {
   ];
 
   return (
-    <Box maxW="1230px" h="59vh" mx="auto" my="20px">
+    <Box maxW="1230px" h="78vh" mx="auto" my="15px">
       <DataGrid
         className={classes.root}
-        autoHeight
+        //autoHeight
         rowHeight={60}
         disableSelectionOnClick
-        hideFooter
-        pageSize={100}
+        //hideFooter
+        //pageSize={100}
+        autoPageSize
         rows={rows}
         columns={columns}
         localeText={{
