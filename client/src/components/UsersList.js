@@ -1,5 +1,7 @@
 import { DataGrid } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import Pagination from "@material-ui/lab/Pagination";
 import {
   Box,
   Avatar,
@@ -21,13 +23,38 @@ import {
 const useStyles = makeStyles({
   root: {
     "& .datagrid--header": {
-      backgroundColor: "#b6b6b6",
+      backgroundColor: "#ededed",
       //color: "#666666",
     },
     "& .datagrid--cell": {},
     //backgroundColor: "#ffffff",
+    "& .MuiDataGrid-footer": {
+      backgroundColor: "#ededed",
+    },
   },
 });
+
+function CustomPagination(props) {
+  const { state, api } = props;
+  const classes = useStyles();
+
+  return (
+    <Pagination
+      className={classes.root}
+      color="primary"
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
+      onChange={(event, value) => api.current.setPage(value)}
+    />
+  );
+}
+
+CustomPagination.propTypes = {
+  api: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
+  state: PropTypes.object.isRequired,
+};
 
 const UsersList = (props) => {
   const modeColor = useColorModeValue("gray.900", "gray.300");
@@ -199,6 +226,10 @@ const UsersList = (props) => {
         //hideFooter
         //pageSize={100}
         autoPageSize
+        pagination
+        components={{
+          Pagination: CustomPagination,
+        }}
         rows={rows}
         columns={columns}
         localeText={{
