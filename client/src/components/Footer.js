@@ -1,9 +1,11 @@
 import { Text, Image, Link, Box } from "@chakra-ui/react";
 
+const themeColor = "#999999";
+
 export default function Footer() {
   return (
     <Box position="fixed" bottom="6" left="0" right="0" textAlign="center">
-      <Text fontSize="sm" color="#999999">
+      <Text fontSize="sm" color={themeColor}>
         created with 🍺 by honzza dvorak, v1.0.0
       </Text>
       <Link href="https://www.strava.com" isExternal></Link>

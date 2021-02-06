@@ -13,35 +13,38 @@ import {
 } from "@chakra-ui/react";
 //import { csCZ } from '@material-ui/core/locale';
 
-// const formatter = new Intl.NumberFormat("cs-CZ", {
-//   style: "currency",
-//   currency: "CZK",
-//   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-//   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-// });
+const formatter = new Intl.NumberFormat("cs-CZ", {
+  style: "currency",
+  currency: "CZK",
+  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
+const themeColor = "#e6e6e6";
 
 const useStyles = makeStyles({
   root: {
     "& .datagrid--header": {
-      backgroundColor: "#ededed",
+      backgroundColor: themeColor,
       //color: "#666666",
     },
     "& .datagrid--cell": {},
     //backgroundColor: "#ffffff",
     "& .MuiDataGrid-footer": {
-      backgroundColor: "#ededed",
+      backgroundColor: themeColor,
     },
   },
 });
 
 function CustomPagination(props) {
   const { state, api } = props;
-  const classes = useStyles();
 
   return (
     <Pagination
-      className={classes.root}
-      color="primary"
+      shape="rounded"
+      size="small"
+      hidePrevButton
+      hideNextButton
       page={state.pagination.page}
       count={state.pagination.pageCount}
       onChange={(event, value) => api.current.setPage(value)}
@@ -150,7 +153,7 @@ const UsersList = (props) => {
         <Flex direction="column">
           <Tag mb={1}>{params.value.km} km</Tag>
           <Tag variant="outline" colorScheme="blue">
-            {params.value.kc} Kč
+            {formatter.format(params.value.kc)}
           </Tag>
         </Flex>
       ),
@@ -165,7 +168,7 @@ const UsersList = (props) => {
         <Flex direction="column">
           <Tag mb={1}>{params.value.km} km</Tag>
           <Tag variant="outline" colorScheme="blue">
-            {params.value.kc} Kč
+            {formatter.format(params.value.kc)}
           </Tag>
         </Flex>
       ),
@@ -180,7 +183,7 @@ const UsersList = (props) => {
         <Flex direction="column">
           <Tag mb={1}>{params.value.km} km</Tag>
           <Tag variant="outline" colorScheme="blue">
-            {params.value.kc} Kč
+            {formatter.format(params.value.kc)}
           </Tag>
         </Flex>
       ),
@@ -195,7 +198,7 @@ const UsersList = (props) => {
         <Flex direction="column">
           <Tag mb={1}>{params.value.km} km</Tag>
           <Tag variant="outline" colorScheme="blue">
-            {params.value.kc} Kč
+            {formatter.format(params.value.kc)}
           </Tag>
         </Flex>
       ),
@@ -209,7 +212,7 @@ const UsersList = (props) => {
       renderCell: (params) => (
         <Flex justify="center" color={modeColor}>
           <Stat>
-            <StatNumber>{params.value} Kč</StatNumber>
+            <StatNumber>{formatter.format(params.value)}</StatNumber>
           </Stat>
         </Flex>
       ),

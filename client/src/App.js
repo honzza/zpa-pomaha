@@ -48,7 +48,6 @@ function App() {
           }
         );
         const responseData = await response.json();
-        console.log(responseData);
         if (responseData.success === true) {
           setIsLoggedIn(true);
           setIsLoading(false);
