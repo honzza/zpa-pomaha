@@ -1,0 +1,5 @@
+date;version;type;description
+;;plán;Procentuální podíl na celkové částce
+;;plán;Zvýraznit v tabulce přihlášeného uživatele a zobrazit jeho jméno v záhlaví
+;;plán;Celkové součty nad hlavní tabulku - běh, cyklo, plavání, celkem - vše km a kč
+08.02.2021;1.0.0;přidáno;První oficiální vydání aplikace se základní přehledovou tabulkou

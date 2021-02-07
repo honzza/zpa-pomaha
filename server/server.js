@@ -67,6 +67,7 @@ app.use("/auth", require("./routes/auth-routes"));
 app.use("/api/user", ensureAuth, require("./routes/users-routes"));
 app.use("/api/update", require("./routes/stravaupdate-routes"));
 app.use("/api/activity", ensureAuth, require("./routes/activities-routes"));
+app.use("/api/admin", ensureAuth, require("./routes/admin-routes"));
 
 // Unknown route error
 app.use((req, res, next) => {

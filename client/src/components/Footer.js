@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <Box position="fixed" bottom="6" left="0" right="0" textAlign="center">
       <Text fontSize="sm" color={themeColor}>
-        created with 🍺 by honzza dvorak, v1.0.0
+        created with 🍺 by honzza dvorak {new Date().getFullYear()}
       </Text>
       <Link href="https://www.strava.com" isExternal></Link>
       <Box position="fixed" bottom="1" right="1">

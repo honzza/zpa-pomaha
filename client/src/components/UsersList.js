@@ -26,21 +26,29 @@ const useStyles = makeStyles({
   root: {
     "& .datagrid--header": {
       backgroundColor: themeColor,
+      fontFamily: "Montserrat",
       //color: "#666666",
     },
-    "& .datagrid--cell": {},
-    //backgroundColor: "#ffffff",
+    "& .datagrid--cell": {
+      fontFamily: "Montserrat",
+      //backgroundColor: "#ffffff",
+    },
     "& .MuiDataGrid-footer": {
       backgroundColor: themeColor,
+    },
+    "& .MuiPaginationItem-root": {
+      fontFamily: "Montserrat",
     },
   },
 });
 
 function CustomPagination(props) {
   const { state, api } = props;
+  const classes = useStyles();
 
   return (
     <Pagination
+      className={classes.root}
       shape="rounded"
       size="small"
       hidePrevButton
@@ -117,7 +125,7 @@ const UsersList = (props) => {
     {
       field: "id",
       headerName: "#",
-      width: 60,
+      width: 65,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
       renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
@@ -206,7 +214,7 @@ const UsersList = (props) => {
     {
       field: "kcTotal",
       headerName: "Celkem",
-      width: 168,
+      width: 163,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
       renderCell: (params) => (
