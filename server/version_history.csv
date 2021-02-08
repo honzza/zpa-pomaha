@@ -1,6 +1,9 @@
 date;version;type;description
+;;plán;Stránka s popisem pro koho sportujeme. Přehled o historických projektech a kolik se "nasportovalo" km a kč.
 ;;plán;Samostatná tabulka pro běh, cyklo, plavání a běžky
 ;;plán;Procentuální podíl na celkové částce
 ;;plán;Zvýraznit v tabulce přihlášeného uživatele a zobrazit jeho jméno v záhlaví
 ;;plán;Celkové součty nad hlavní tabulku - běh, cyklo, plavání, běžky, celkem - vše km a kč
+09.02.2021;1.0.1;změna;Místo stránkování se zobrazuje scrollbar, ukotveno záhlaví tabulky, prohozeno pořadí běžky-plavání, drobné úpravy vzhledu
+09.02.2021;1.0.1;opraveno;Chyba při načítání hlavní stránky, která se projevila u Hynka
 08.02.2021;1.0.0;přidáno;První oficiální vydání aplikace se základní přehledovou tabulkou

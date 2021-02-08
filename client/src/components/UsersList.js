@@ -1,7 +1,7 @@
 import { DataGrid } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
-import Pagination from "@material-ui/lab/Pagination";
+// import PropTypes from "prop-types";
+// import Pagination from "@material-ui/lab/Pagination";
 import {
   Box,
   Avatar,
@@ -16,7 +16,7 @@ import {
 const formatter = new Intl.NumberFormat("cs-CZ", {
   style: "currency",
   currency: "CZK",
-  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
   maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
@@ -24,48 +24,55 @@ const themeColor = "#e6e6e6";
 
 const useStyles = makeStyles({
   root: {
+    borderRadius: "10px",
     "& .datagrid--header": {
       backgroundColor: themeColor,
       fontFamily: "Montserrat",
       //color: "#666666",
     },
+    "& .MuiDataGrid-columnsContainer": {
+      position: "sticky",
+      top: 0,
+      zIndex: 1,
+      borderRadius: "10px",
+    },
     "& .datagrid--cell": {
       fontFamily: "Montserrat",
       //backgroundColor: "#ffffff",
     },
-    "& .MuiDataGrid-footer": {
-      backgroundColor: themeColor,
-    },
-    "& .MuiPaginationItem-root": {
-      fontFamily: "Montserrat",
-    },
+    // "& .MuiDataGrid-footer": {
+    //   backgroundColor: themeColor,
+    // },
+    // "& .MuiPaginationItem-root": {
+    //   fontFamily: "Montserrat",
+    // },
   },
 });
 
-function CustomPagination(props) {
-  const { state, api } = props;
-  const classes = useStyles();
+// function CustomPagination(props) {
+//   const { state, api } = props;
+//   const classes = useStyles();
 
-  return (
-    <Pagination
-      className={classes.root}
-      shape="rounded"
-      size="small"
-      hidePrevButton
-      hideNextButton
-      page={state.pagination.page}
-      count={state.pagination.pageCount}
-      onChange={(event, value) => api.current.setPage(value)}
-    />
-  );
-}
+//   return (
+//     <Pagination
+//       className={classes.root}
+//       shape="rounded"
+//       size="small"
+//       hidePrevButton
+//       hideNextButton
+//       page={state.pagination.page}
+//       count={state.pagination.pageCount}
+//       onChange={(event, value) => api.current.setPage(value)}
+//     />
+//   );
+// }
 
-CustomPagination.propTypes = {
-  api: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
-  state: PropTypes.object.isRequired,
-};
+// CustomPagination.propTypes = {
+//   api: PropTypes.shape({
+//     current: PropTypes.object.isRequired,
+//   }).isRequired,
+//   state: PropTypes.object.isRequired,
+// };
 
 const UsersList = (props) => {
   const modeColor = useColorModeValue("gray.900", "gray.300");
@@ -108,13 +115,13 @@ const UsersList = (props) => {
         km: Math.round(user.activity.ride.m / 100) / 10,
         kc: Math.round(user.activity.ride.kc),
       },
-      swim: {
-        km: Math.round(user.activity.swim.m / 100) / 10,
-        kc: Math.round(user.activity.swim.kc),
-      },
       nski: {
         km: Math.round(user.activity.nski.m / 100) / 10,
         kc: Math.round(user.activity.nski.kc),
+      },
+      swim: {
+        km: Math.round(user.activity.swim.m / 100) / 10,
+        kc: Math.round(user.activity.swim.kc),
       },
       kcTotal: Math.round(user.kcTotal),
     };
@@ -182,8 +189,8 @@ const UsersList = (props) => {
       ),
     },
     {
-      field: "swim",
-      headerName: "Plavání",
+      field: "nski",
+      headerName: "Běžky",
       width: 180,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
@@ -197,8 +204,8 @@ const UsersList = (props) => {
       ),
     },
     {
-      field: "nski",
-      headerName: "Běžky",
+      field: "swim",
+      headerName: "Plavání",
       width: 180,
       headerClassName: "datagrid--header",
       cellClassName: "datagrid--cell",
@@ -228,19 +235,20 @@ const UsersList = (props) => {
   ];
 
   return (
-    <Box maxW="1230px" h="78vh" mx="auto" my="15px">
+    <Box maxW="1230px" mx="auto" my={{ base: "0px", lg: "15px" }} h="80vh">
       <DataGrid
         className={classes.root}
         //autoHeight
         rowHeight={60}
+        headerHeight={40}
         disableSelectionOnClick
-        //hideFooter
+        hideFooter
         //pageSize={100}
-        autoPageSize
-        pagination
-        components={{
-          Pagination: CustomPagination,
-        }}
+        //autoPageSize
+        //pagination
+        // components={{
+        //   Pagination: CustomPagination,
+        // }}
         rows={rows}
         columns={columns}
         localeText={{
