@@ -1,6 +1,6 @@
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
-const activityTypes = ["ride", "run", "swim"];
+const activityTypes = ["ride", "run", "swim", "nski"];
 
 const getActivityByType = async (req, res, next) => {
   const activityParam = req.params.activityType;
@@ -21,19 +21,21 @@ const getActivityByType = async (req, res, next) => {
     );
   }
   if (activities.length === 0) {
-    return next(new HttpError("Could not find anyone with this activity", 404));
+    return next(new HttpError("Nikdo ještě nemá tuto aktivitu", 404));
   }
   const result = activities.map((a) => {
     return {
       firstname: a.firstname,
       lastname: a.lastname,
+      displayname: a.displayname,
+      avatar: a.avatar,
       [activityParam]: {
         m: a.activity[activityParam].m,
         kc: a.activity[activityParam].kc,
       },
     };
   });
-  res.json(result);
+  res.json({ activity: result });
 };
 
 exports.getActivityByType = getActivityByType;

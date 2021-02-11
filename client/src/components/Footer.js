@@ -4,7 +4,7 @@ const themeColor = "#999999";
 
 export default function Footer() {
   return (
-    <Box position="fixed" bottom="6" left="0" right="0" textAlign="center">
+    <Box textAlign="center" mt="20px">
       <Text fontSize="sm" color={themeColor}>
         made with 🍺 by honzza dvorak {new Date().getFullYear()}
       </Text>
@@ -13,7 +13,7 @@ export default function Footer() {
         <Image
           src="api_logo_pwrdBy_strava_horiz_gray.svg"
           alt="Powered by STRAVA"
-          htmlWidth="140px"
+          htmlWidth="130px"
           mt="10px"
         />
       </Box>

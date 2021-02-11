@@ -1,5 +1,5 @@
 import {
-  // List,
+  List,
   Box,
   Flex,
   Heading,
@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FiLogOut, FiInfo, FiHome } from "react-icons/fi";
-//import NavLinkWrapper from "./UIElements/NavLinkWrapper";
+import NavLinkWrapper from "./UIElements/NavLinkWrapper";
 import NavIcon from "./UIElements/NavIcon";
 import AuthContext from "../context/auth-context";
 import { useContext } from "react";
@@ -55,11 +55,12 @@ export default function Navbar() {
         </Stack>
         {auth.isLoggedIn && (
           <Box display="flex">
-            {/* <List display="flex">
-              <NavLinkWrapper path="/ride" text="cyklo" />
+            <List display="flex">
               <NavLinkWrapper path="/run" text="běh" />
+              <NavLinkWrapper path="/ride" text="cyklo" />
+              <NavLinkWrapper path="/nski" text="běžky" />
               <NavLinkWrapper path="/swim" text="plavání" />
-            </List> */}
+            </List>
             <DarkMode>
               <NavLink to="/dashboard">
                 <NavIcon as={FiHome} label="Úvod" aria="Dashboard" p="7px" />

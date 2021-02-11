@@ -1,5 +1,5 @@
-import { Text } from "@chakra-ui/react";
+import Activity from "./activity";
 
 export default function Run() {
-  return <Text my="10px">běžci</Text>;
+  return Activity("run", "Běh");
 }

@@ -12,8 +12,9 @@ import LoadingSpinner from "./components/UIElements/LoadingSpinner";
 
 const Login = React.lazy(() => import("./pages/login"));
 const User = React.lazy(() => import("./pages/user"));
-const Ride = React.lazy(() => import("./pages/ride"));
 const Run = React.lazy(() => import("./pages/run"));
+const Ride = React.lazy(() => import("./pages/ride"));
+const Nski = React.lazy(() => import("./pages/nski"));
 const Swim = React.lazy(() => import("./pages/swim"));
 const About = React.lazy(() => import("./pages/about"));
 
@@ -100,8 +101,9 @@ function App() {
     routes = (
       <Switch>
         <Route exact path="/dashboard" component={User} />
-        <Route exact path="/ride" component={Ride} />
         <Route exact path="/run" component={Run} />
+        <Route exact path="/ride" component={Ride} />
+        <Route exact path="/nski" component={Nski} />
         <Route exact path="/swim" component={Swim} />
         <Route exact path="/about" component={About} />
         <Redirect to="/dashboard" />
