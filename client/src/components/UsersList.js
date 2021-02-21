@@ -1,90 +1,79 @@
-import { DataGrid } from "@material-ui/data-grid";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-// import PropTypes from "prop-types";
-// import Pagination from "@material-ui/lab/Pagination";
 import {
   Box,
+  Collapse,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper,
   Avatar,
-  Tag,
-  Flex,
-  StatNumber,
-  Stat,
-  useColorModeValue,
-} from "@chakra-ui/react";
-//import { csCZ } from '@material-ui/core/locale';
+} from "@material-ui/core";
 
-const formatter = new Intl.NumberFormat("cs-CZ", {
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+
+const formatterCU = new Intl.NumberFormat("cs-CZ", {
   style: "currency",
   currency: "CZK",
   minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
   maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-const themeColor = "#e6e6e6";
-
-const useStyles = makeStyles({
-  root: {
-    borderRadius: "10px",
-    "& .datagrid--header": {
-      backgroundColor: themeColor,
-      fontFamily: "Montserrat",
-      //color: "#666666",
-    },
-    "& .MuiDataGrid-columnsContainer": {
-      position: "sticky",
-      top: 0,
-      zIndex: 1,
-      borderRadius: "10px",
-    },
-    "& .datagrid--cell": {
-      fontFamily: "Montserrat",
-      //backgroundColor: "#ffffff",
-    },
-    // "& .MuiDataGrid-footer": {
-    //   backgroundColor: themeColor,
-    // },
-    // "& .MuiPaginationItem-root": {
-    //   fontFamily: "Montserrat",
-    // },
-  },
+const formatterKM = new Intl.NumberFormat("cs-CZ", {
+  style: "unit",
+  unit: "kilometer",
+  minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-// function CustomPagination(props) {
-//   const { state, api } = props;
-//   const classes = useStyles();
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > *": {
+      borderBottom: "unset",
+    },
+  },
+  kmPaper: {
+    backgroundColor: "#ebebeb",
+    padding: "2px",
+    textAlign: "center",
+  },
+  kcPaper: {
+    padding: "2px",
+    textAlign: "center",
+  },
+  columnPaper: {
+    textAlign: "center",
+    backgroundColor: "#C6E2FF",
+  },
+  columnKcPaper: {
+    textAlign: "center",
+  },
+  columnKmPaper: {
+    textAlign: "center",
+  },
+  detailRow: {
+    backgroundColor: "#C6E2FF",
+  },
+  container: {
+    maxHeight: "80vh",
+  },
+  headCell: {
+    verticalAlign: "top",
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+}));
 
-//   return (
-//     <Pagination
-//       className={classes.root}
-//       shape="rounded"
-//       size="small"
-//       hidePrevButton
-//       hideNextButton
-//       page={state.pagination.page}
-//       count={state.pagination.pageCount}
-//       onChange={(event, value) => api.current.setPage(value)}
-//     />
-//   );
-// }
-
-// CustomPagination.propTypes = {
-//   api: PropTypes.shape({
-//     current: PropTypes.object.isRequired,
-//   }).isRequired,
-//   state: PropTypes.object.isRequired,
-// };
-
-const UsersList = (props) => {
-  const modeColor = useColorModeValue("gray.900", "gray.300");
+const UserList = (props) => {
   const classes = useStyles();
-
-  if (props.items.length === 0) {
-    return (
-      <div className="center">
-        <h2>Nebyli nalezeni žádní uživatelé</h2>
-      </div>
-    );
-  }
 
   //Prepare data, sort by sum of Kc
   const results = props.items.map((user) => {
@@ -97,181 +86,192 @@ const UsersList = (props) => {
         user.activity.nski.kc,
     };
   });
+
+  let sumRunKm = 0;
+  let sumRunKc = 0;
+  let sumRideKm = 0;
+  let sumRideKc = 0;
+  let sumNskiKm = 0;
+  let sumNskiKc = 0;
+  let sumSwimKm = 0;
+  let sumSwimKc = 0;
+  let sumKc = 0;
+
+  results.forEach((user) => {
+    sumRunKm += user.activity.run.m;
+    sumRunKc += user.activity.run.kc;
+    sumRideKm += user.activity.ride.m;
+    sumRideKc += user.activity.ride.kc;
+    sumNskiKm += user.activity.nski.m;
+    sumNskiKc += user.activity.nski.kc;
+    sumSwimKm += user.activity.swim.m;
+    sumSwimKc += user.activity.swim.kc;
+    sumKc += user.kcTotal;
+  });
+  const sumKm = sumRunKm + sumRideKm + sumNskiKm + sumSwimKm;
   const resultsSorted = results.sort((a, b) => b.kcTotal - a.kcTotal);
 
-  //Define rows of grid
-  let i = 0;
-  const rows = resultsSorted.map((user) => {
-    i++;
-    return {
-      id: i,
-      avatar: { url: user.avatar, name: user.displayname },
-      displayName: user.displayname,
-      run: {
-        km: Math.round(user.activity.run.m / 100) / 10,
-        kc: Math.round(user.activity.run.kc),
-      },
-      ride: {
-        km: Math.round(user.activity.ride.m / 100) / 10,
-        kc: Math.round(user.activity.ride.kc),
-      },
-      nski: {
-        km: Math.round(user.activity.nski.m / 100) / 10,
-        kc: Math.round(user.activity.nski.kc),
-      },
-      swim: {
-        km: Math.round(user.activity.swim.m / 100) / 10,
-        kc: Math.round(user.activity.swim.kc),
-      },
-      kcTotal: Math.round(user.kcTotal),
-    };
-  });
-
-  // Define columns of grid
   const columns = [
-    {
-      field: "id",
-      headerName: "#",
-      width: 65,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
-    },
-    {
-      field: "avatar",
-      headerName: ":)",
-      width: 80,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Box mt={3}>
-          <Avatar src={params.value.url} name={params.value.name} />
-        </Box>
-      ),
-    },
-    {
-      field: "displayName",
-      headerName: "Sportovec",
-      width: 200,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
-    },
-
-    {
-      field: "run",
-      headerName: "Běh",
-      width: 180,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Flex direction="column">
-          <Tag mb={1}>{params.value.km} km</Tag>
-          <Tag variant="outline" colorScheme="blue">
-            {formatter.format(params.value.kc)}
-          </Tag>
-        </Flex>
-      ),
-    },
-    {
-      field: "ride",
-      headerName: "Cyklo",
-      width: 180,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Flex direction="column">
-          <Tag mb={1}>{params.value.km} km</Tag>
-          <Tag variant="outline" colorScheme="blue">
-            {formatter.format(params.value.kc)}
-          </Tag>
-        </Flex>
-      ),
-    },
-    {
-      field: "nski",
-      headerName: "Běžky",
-      width: 180,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Flex direction="column">
-          <Tag mb={1}>{params.value.km} km</Tag>
-          <Tag variant="outline" colorScheme="blue">
-            {formatter.format(params.value.kc)}
-          </Tag>
-        </Flex>
-      ),
-    },
-    {
-      field: "swim",
-      headerName: "Plavání",
-      width: 180,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Flex direction="column">
-          <Tag mb={1}>{params.value.km} km</Tag>
-          <Tag variant="outline" colorScheme="blue">
-            {formatter.format(params.value.kc)}
-          </Tag>
-        </Flex>
-      ),
-    },
-    {
-      field: "kcTotal",
-      headerName: "Celkem",
-      width: 163,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Flex justify="center" color={modeColor}>
-          <Stat>
-            <StatNumber>{formatter.format(params.value)}</StatNumber>
-          </Stat>
-        </Flex>
-      ),
-    },
+    { text: "#", km: null, kc: null },
+    { text: ":)", km: null, kc: null },
+    { text: "SPORTOVEC", km: null, kc: null },
+    { text: "BĚH", km: sumRunKm, kc: sumRunKc },
+    { text: "CYKLO", km: sumRideKm, kc: sumRideKc },
+    { text: "BĚŽKY", km: sumNskiKm, kc: sumNskiKc },
+    { text: "PLAVÁNÍ", km: sumSwimKm, kc: sumSwimKc },
+    { text: "CELKEM", km: sumKm, kc: sumKc },
   ];
 
+  const SportStats = (props) => {
+    const { km, kc } = props;
+
+    return (
+      <TableCell>
+        <Box display="flex" flexDirection="column">
+          <Paper className={classes.kmPaper}>
+            {formatterKM.format(km / 1000)}
+          </Paper>
+          <Box my={"3px"} />
+          <Paper className={classes.kcPaper}>{formatterCU.format(kc)}</Paper>
+        </Box>
+      </TableCell>
+    );
+  };
+
+  const Row = (props) => {
+    const [open, setOpen] = React.useState(false);
+    const {
+      avatar,
+      displayname,
+      activity: {
+        run: { m: runKM },
+      },
+      activity: {
+        run: { kc: runKC },
+      },
+      activity: {
+        ride: { m: rideKM },
+      },
+      activity: {
+        ride: { kc: rideKC },
+      },
+      activity: {
+        nski: { m: nskiKM },
+      },
+      activity: {
+        nski: { kc: nskiKC },
+      },
+      activity: {
+        swim: { m: swimKM },
+      },
+      activity: {
+        swim: { kc: swimKC },
+      },
+      kcTotal,
+    } = props.row;
+
+    return (
+      <React.Fragment>
+        <TableRow key={props.index + 1} hover className={classes.root}>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row" align="center">
+            {props.index + 1}
+          </TableCell>
+          <TableCell>
+            <Box align="center">
+              {
+                <Avatar
+                  alt={displayname}
+                  src={avatar}
+                  variant="rounded"
+                  className={classes.large}
+                />
+              }
+            </Box>
+          </TableCell>
+          <TableCell align="center">
+            <Typography>{displayname}</Typography>
+          </TableCell>
+          <SportStats km={runKM} kc={runKC} />
+          <SportStats km={rideKM} kc={rideKC} />
+          <SportStats km={nskiKM} kc={nskiKC} />
+          <SportStats km={swimKM} kc={swimKC} />
+          <TableCell>
+            <Typography variant="h5" align="center">
+              {formatterCU.format(kcTotal)}
+            </Typography>
+          </TableCell>
+        </TableRow>
+        <TableRow className={classes.detailRow}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <Typography variant="subtitle1" gutterBottom component="div">
+                  Tady budou další statistiky
+                </Typography>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  };
+
+  const Column = (props) => {
+    return (
+      <TableCell className={classes.headCell}>
+        <Box display="flex" flexDirection="column">
+          <Paper className={classes.columnPaper}>
+            <Typography>{props.text}</Typography>
+          </Paper>
+          <Box my={"3px"} />
+          {props.km && (
+            <Paper className={classes.columnKmPaper}>
+              <Typography variant="subtitle1">
+                {formatterKM.format(props.km / 1000)}
+              </Typography>
+            </Paper>
+          )}
+          <Box my={"3px"} />
+          {props.kc && (
+            <Paper className={classes.columnKcPaper}>
+              <Typography variant="subtitle1">
+                {formatterCU.format(props.kc)}
+              </Typography>
+            </Paper>
+          )}
+        </Box>
+      </TableCell>
+    );
+  };
+
   return (
-    <Box maxW="1230px" mx="auto" my={{ base: "0px", lg: "15px" }} h="80vh">
-      <DataGrid
-        className={classes.root}
-        //autoHeight
-        rowHeight={60}
-        headerHeight={40}
-        disableSelectionOnClick
-        hideFooter
-        //pageSize={100}
-        //autoPageSize
-        //pagination
-        // components={{
-        //   Pagination: CustomPagination,
-        // }}
-        rows={rows}
-        columns={columns}
-        localeText={{
-          columnMenuLabel: "Menu",
-          columnMenuFilter: "Filtr",
-          columnMenuHideColumn: "Skryj",
-          columnMenuUnsort: "Zruš řazení",
-          columnMenuSortAsc: "Vzestupně",
-          columnMenuSortDesc: "Sestupně",
-          columnMenuShowColumns: "Vyber sloupce",
-          filterPanelOperators: "Operátor",
-          filterPanelDeleteIconLabel: "Zruš",
-          filterPanelColumns: "Sloupec",
-          columnHeaderFiltersTooltipActive: (count) => `${count} aktivní filtr`,
-          columnHeaderSortIconLabel: "Řazení",
-          columnsPanelTextFieldLabel: "Najdi sloupec",
-          columnsPanelTextFieldPlaceholder: "Název sloupce",
-          columnsPanelShowAllButton: "Ukaž vše",
-          columnsPanelHideAllButton: "Skryj vše",
-        }}
-      />
-    </Box>
+    <TableContainer component={Paper} className={classes.container}>
+      <Table stickyHeader aria-label="collapsible table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            {columns.map((column) => (
+              <Column text={column.text} km={column.km} kc={column.kc} />
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {resultsSorted.map((row, index) => (
+            <Row index={index} row={row} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
-export default UsersList;
+export default UserList;

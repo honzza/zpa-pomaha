@@ -1,46 +1,54 @@
-import { DataGrid } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper,
   Avatar,
-  Tag,
-  Flex,
-  StatNumber,
-  Stat,
-  useColorModeValue,
-} from "@chakra-ui/react";
-//import { csCZ } from '@material-ui/core/locale';
+  Box,
+} from "@material-ui/core";
 
-const formatter = new Intl.NumberFormat("cs-CZ", {
+const formatterCU = new Intl.NumberFormat("cs-CZ", {
   style: "currency",
   currency: "CZK",
   minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
   maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-const themeColor = "#e6e6e6";
-
-const useStyles = makeStyles({
-  root: {
-    borderRadius: "10px",
-    "& .datagrid--header": {
-      backgroundColor: themeColor,
-      fontFamily: "Montserrat",
-    },
-    "& .MuiDataGrid-columnsContainer": {
-      position: "sticky",
-      top: 0,
-      zIndex: 1,
-      borderRadius: "10px",
-    },
-    "& .datagrid--cell": {
-      fontFamily: "Montserrat",
-    },
-  },
+const formatterKM = new Intl.NumberFormat("cs-CZ", {
+  style: "unit",
+  unit: "kilometer",
+  minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
+const useStyles = makeStyles((theme) => ({
+  kmPaper: {
+    backgroundColor: "#ebebeb",
+    padding: "2px",
+    textAlign: "center",
+  },
+  columnPaper: {
+    textAlign: "center",
+    backgroundColor: "#C6E2FF",
+  },
+  container: {
+    maxHeight: "80vh",
+  },
+  headCell: {
+    verticalAlign: "top",
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+}));
+
 const ActivityList = (props) => {
-  const modeColor = useColorModeValue("gray.900", "gray.300");
   const classes = useStyles();
   const activityType = props.type;
   const activityLabel = props.label;
@@ -50,103 +58,77 @@ const ActivityList = (props) => {
     (a, b) => b[activityType].kc - a[activityType].kc
   );
 
-  //Define rows of grid
-  let i = 0;
-  const rows = resultsSorted.map((activity) => {
-    i++;
-    return {
-      id: i,
-      avatar: { url: activity.avatar, name: activity.displayname },
-      displayName: activity.displayname,
-      km: Math.round(activity[activityType].m / 100) / 10,
-      kc: Math.round(activity[activityType].kc),
-    };
-  });
-  // Define columns of grid
-  const columns = [
-    {
-      field: "id",
-      headerName: "#",
-      width: 65,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
-    },
-    {
-      field: "avatar",
-      headerName: ":)",
-      width: 80,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Box mt={3}>
-          <Avatar src={params.value.url} name={params.value.name} />
-        </Box>
-      ),
-    },
-    {
-      field: "displayName",
-      headerName: "Sportovec",
-      width: 200,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => <Box color={modeColor}>{params.value}</Box>,
-    },
+  const columns = ["#", ":)", "SPORTOVEC", activityLabel, "KČ"];
 
-    {
-      field: "km",
-      headerName: activityLabel,
-      width: 180,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => <Tag mb={1}>{params.value} km</Tag>,
-    },
-    {
-      field: "kc",
-      headerName: "Kč",
-      width: 180,
-      headerClassName: "datagrid--header",
-      cellClassName: "datagrid--cell",
-      renderCell: (params) => (
-        <Flex justify="center" color={modeColor}>
-          <Stat>
-            <StatNumber>{formatter.format(params.value)}</StatNumber>
-          </Stat>
-        </Flex>
-      ),
-    },
-  ];
+  const Row = (props) => {
+    const {
+      avatar,
+      displayname,
+      [activityType]: { m },
+      [activityType]: { kc },
+    } = props.row;
+
+    return (
+      <TableRow key={props.index + 1} hover>
+        <TableCell align="center" component="th" scope="row">
+          {props.index + 1}
+        </TableCell>
+        <TableCell>
+          <Box align="center">
+            {
+              <Avatar
+                alt={displayname}
+                src={avatar}
+                variant="rounded"
+                className={classes.large}
+              />
+            }
+          </Box>
+        </TableCell>
+        <TableCell align="center">
+          <Typography>{displayname}</Typography>
+        </TableCell>
+        <TableCell>
+          <Paper className={classes.kmPaper}>
+            <Typography>{formatterKM.format(m / 1000)}</Typography>
+          </Paper>
+        </TableCell>
+        <TableCell>
+          <Typography variant="h5" align="center">
+            {formatterCU.format(kc)}
+          </Typography>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+  const Column = (props) => {
+    return (
+      <TableCell className={classes.headCell}>
+        <Paper className={classes.columnPaper}>
+          <Typography>{props.text}</Typography>
+        </Paper>
+      </TableCell>
+    );
+  };
 
   return (
-    <Box maxW="708px" mx="auto" my={{ base: "0px", lg: "15px" }} h="80vh">
-      <DataGrid
-        className={classes.root}
-        rowHeight={60}
-        headerHeight={40}
-        disableSelectionOnClick
-        hideFooter
-        rows={rows}
-        columns={columns}
-        localeText={{
-          columnMenuLabel: "Menu",
-          columnMenuFilter: "Filtr",
-          columnMenuHideColumn: "Skryj",
-          columnMenuUnsort: "Zruš řazení",
-          columnMenuSortAsc: "Vzestupně",
-          columnMenuSortDesc: "Sestupně",
-          columnMenuShowColumns: "Vyber sloupce",
-          filterPanelOperators: "Operátor",
-          filterPanelDeleteIconLabel: "Zruš",
-          filterPanelColumns: "Sloupec",
-          columnHeaderFiltersTooltipActive: (count) => `${count} aktivní filtr`,
-          columnHeaderSortIconLabel: "Řazení",
-          columnsPanelTextFieldLabel: "Najdi sloupec",
-          columnsPanelTextFieldPlaceholder: "Název sloupce",
-          columnsPanelShowAllButton: "Ukaž vše",
-          columnsPanelHideAllButton: "Skryj vše",
-        }}
-      />
-    </Box>
+    <TableContainer component={Paper} className={classes.container}>
+      <Table stickyHeader aria-label="table">
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <Column text={column} />
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {resultsSorted.map((row, index) => (
+            <Row index={index} row={row} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

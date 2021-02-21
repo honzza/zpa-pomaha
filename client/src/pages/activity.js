@@ -1,47 +1,50 @@
 import React, { useEffect, useState } from "react";
 import ActivityList from "../components/ActivityList";
-import LoadingSpinner from "../components/UIElements/LoadingSpinner";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import WarningAlert from "../components/UIElements/WarningAlert";
+import { useHttpClient } from "../hooks/http-hook";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
 
 const Activity = (type, label) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const classes = useStyles();
+  const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedActivities, setLoadedActivities] = useState();
 
   useEffect(() => {
-    const sendRequest = async () => {
-      setIsLoading(true);
+    const fetchActivities = async () => {
       try {
-        const response = await fetch(
+        const responseData = await sendRequest(
           `${process.env.REACT_APP_BACKEND_PATH}/api/activity/${type}`,
+          "GET",
+          null,
           {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true,
-            },
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
           }
         );
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
         setLoadedActivities(responseData);
-        setIsLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setIsLoading(false);
-      }
+      } catch (err) {}
     };
-    sendRequest();
-  }, [type]);
+    fetchActivities();
+  }, [sendRequest, type]);
 
   return (
     <React.Fragment>
       {error && <WarningAlert error={error} />}
-      {isLoading && <LoadingSpinner />}
+      {isLoading && (
+        <Backdrop className={classes.backdrop} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       {!isLoading && loadedActivities && (
         <ActivityList items={loadedActivities} type={type} label={label} />
       )}
