@@ -1,3 +1,4 @@
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#C6E2FF",
   },
   container: {
-    maxHeight: "80vh",
+    maxHeight: "79vh",
   },
   headCell: {
     verticalAlign: "top",

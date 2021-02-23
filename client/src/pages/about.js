@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -111,31 +111,35 @@ const About = () => {
   };
 
   return (
-    <TableContainer component={Paper} className={classes.container}>
-      {isLoading && (
-        <Backdrop className={classes.backdrop} open={isLoading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
-      <Typography variant="h5" align="center" className={classes.title}>
-        Novinky a plánovaná rozšíření
-      </Typography>
-      <Table stickyHeader size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <Column text={column} />
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {!isLoading &&
-            loadedChanges &&
-            loadedChanges.map((row, index) => <Row index={index} row={row} />)}
-        </TableBody>
-      </Table>
-      <Box m={"15px"} align="center">
-        <Paper elevation={2}>
+    <React.Fragment>
+      <TableContainer component={Paper} className={classes.container}>
+        {isLoading && (
+          <Backdrop className={classes.backdrop} open={isLoading}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        )}
+        <Typography variant="h5" align="center" className={classes.title}>
+          Novinky a plánovaná rozšíření
+        </Typography>
+        <Table stickyHeader size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <Column text={column} />
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!isLoading &&
+              loadedChanges &&
+              loadedChanges.map((row, index) => (
+                <Row index={index} row={row} />
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Box my={"10px"} align="center">
+        <Paper>
           <img src="mern.png" alt="MERN" className={classes.img} />
           <img
             src="api_logo_pwrdBy_strava_stack_gray.svg"
@@ -149,7 +153,7 @@ const About = () => {
           />
         </Paper>
       </Box>
-    </TableContainer>
+    </React.Fragment>
   );
 };
 

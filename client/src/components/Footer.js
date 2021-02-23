@@ -1,3 +1,4 @@
+import React from "react";
 import { Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -12,7 +13,11 @@ const Footer = () => {
   return (
     <Box textAlign="center" mt="15px">
       <Typography variant="subtitle2" className={classes.text}>
-        made with 🍺 by honzza dvorak {new Date().getFullYear()}
+        made with{" "}
+        <span role="img" aria-label="beer-emoji">
+          🍺
+        </span>{" "}
+        by honzza dvorak {new Date().getFullYear()}
       </Typography>
     </Box>
   );

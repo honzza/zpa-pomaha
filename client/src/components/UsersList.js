@@ -61,10 +61,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#C6E2FF",
   },
   container: {
-    maxHeight: "80vh",
+    maxHeight: "79vh",
   },
   headCell: {
-    verticalAlign: "top",
+    verticalAlign: "bottom",
   },
   large: {
     width: theme.spacing(7),
@@ -229,10 +229,6 @@ const UserList = (props) => {
     return (
       <TableCell className={classes.headCell}>
         <Box display="flex" flexDirection="column">
-          <Paper className={classes.columnPaper}>
-            <Typography>{props.text}</Typography>
-          </Paper>
-          <Box my={"3px"} />
           {props.km && (
             <Paper className={classes.columnKmPaper}>
               <Typography variant="subtitle1">
@@ -248,6 +244,10 @@ const UserList = (props) => {
               </Typography>
             </Paper>
           )}
+          <Box my={"3px"} />
+          <Paper className={classes.columnPaper}>
+            <Typography>{props.text}</Typography>
+          </Paper>
         </Box>
       </TableCell>
     );

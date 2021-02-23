@@ -1,10 +1,12 @@
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Typography, Paper, Link } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   text: {
     textAlign: "center",
-    padding: "0px 80px",
+    [theme.breakpoints.down("sm")]: { padding: "0px 10px" },
+    [theme.breakpoints.up("md")]: { padding: "0px 50px" },
     marginBottom: "30px",
   },
   text2: {
@@ -13,7 +15,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   container: {
-    width: "60%",
+    [theme.breakpoints.down("sm")]: { width: "90%" },
+    [theme.breakpoints.up("md")]: { width: "60%" },
     margin: "auto",
   },
   img: {
@@ -61,7 +64,7 @@ const Login = () => {
             <img
               src="btn_strava_connectwith_orange.svg"
               alt="Connect with STRAVA"
-              width="290px"
+              width="220px"
             />
           </Link>
         </Box>

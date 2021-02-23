@@ -2,6 +2,7 @@ date;version;type;description
 ;;plán;Stránka s popisem pro koho sportujeme. Přehled o historických projektech a kolik se "nasportovalo" km a kč.
 ;;plán;Procentuální podíl na celkové částce
 ;;plán;Zvýraznit v tabulce přihlášeného uživatele a zobrazit jeho jméno v záhlaví
+23.02.2021;2.1.1;opraveno;Čištění kódu a opravy chyb, drobná vylepšení
 21.02.2021;2.1.0;přidáno;Celkové součty nad hlavní tabulku - běh, cyklo, plavání, běžky, celkem - vše km a kč
 21.02.2021;2.0.0;přidáno;Nová verze aplikace! Nové uživatelské rozhraní pro lepší zobrazení na mobilu a další rozvoj
 15.02.2021;1.1.1;opraveno;Čištění kódu a opravy chyb
