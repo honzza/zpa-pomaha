@@ -76,7 +76,7 @@ const UserList = (props) => {
   const classes = useStyles();
 
   //Prepare data, sort by sum of Kc
-  const results = props.items.map((user) => {
+  const results = props.items.users.map((user) => {
     return {
       ...user,
       kcTotal:
@@ -229,7 +229,7 @@ const UserList = (props) => {
     return (
       <TableCell className={classes.headCell}>
         <Box display="flex" flexDirection="column">
-          {props.km && (
+          {props.km > 0 && (
             <Paper className={classes.columnKmPaper}>
               <Typography variant="subtitle1">
                 {formatterKM.format(props.km / 1000)}
@@ -237,7 +237,7 @@ const UserList = (props) => {
             </Paper>
           )}
           <Box my={"3px"} />
-          {props.kc && (
+          {props.kc > 0 && (
             <Paper className={classes.columnKcPaper}>
               <Typography variant="subtitle1">
                 {formatterCU.format(props.kc)}

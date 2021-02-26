@@ -1,12 +1,12 @@
 const router = require("express").Router();
 const passport = require("passport");
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
-const winston = require("../config/winston");
+const { userLogger } = require("../config/winston");
 
 // when login is successful, retrieve user info
 router.get("/login/success", (req, res) => {
   if (req.user) {
-    winston.info(req.user.displayname);
+    userLogger.info(req.user.displayname);
     res.json({
       success: true,
       message: "User has successfully authenticated",

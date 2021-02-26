@@ -24,12 +24,7 @@ const Activity = (type, label) => {
         const responseData = await sendRequest(
           `${process.env.REACT_APP_BACKEND_PATH}/api/activity/${type}`,
           "GET",
-          null,
-          {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": true,
-          }
+          null
         );
         setLoadedActivities(responseData);
       } catch (err) {}

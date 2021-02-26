@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import UsersList from "../components/UsersList";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import WarningAlert from "../components/UIElements/WarningAlert";
+import { useHttpClient } from "../hooks/http-hook";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,54 +15,33 @@ const useStyles = makeStyles((theme) => ({
 
 const User = () => {
   const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(false);
-  //  const [error, setError] = useState();
+  const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
 
   useEffect(() => {
-    const sendRequest = async () => {
-      setIsLoading(true);
+    const fetchUsers = async () => {
       try {
-        const response = await fetch(
+        const responseData = await sendRequest(
           `${process.env.REACT_APP_BACKEND_PATH}/api/user`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true,
-            },
-          }
+          "GET",
+          null
         );
-        const responseData = await response.json();
-        if (responseData.success === false) {
-          throw new Error(responseData.message);
-        }
-        setLoadedUsers(responseData.users);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        console.log(err);
-        // setError(err.message);
-      }
+        setLoadedUsers(responseData);
+      } catch (err) {}
     };
-    sendRequest();
-  }, []);
-
-  // const errorHandler = () => {
-  //   setError(null);
-  // };
+    fetchUsers();
+  }, [sendRequest]);
 
   return (
-    <div>
+    <React.Fragment>
+      {error && <WarningAlert error={error} />}
       {isLoading && (
         <Backdrop className={classes.backdrop} open={isLoading}>
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
       {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
-    </div>
+    </React.Fragment>
   );
 };
 

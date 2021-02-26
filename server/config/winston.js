@@ -1,4 +1,4 @@
-const winston = require("winston");
+const { createLogger, transports } = require("winston");
 require("winston-mongodb");
 
 // define the custom settings for each transport (file, console, mongodb)
@@ -10,13 +10,29 @@ const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     },
+    capped: true,
   },
 };
 
 // instantiate a new Winston Logger with the settings defined above
-const logger = new winston.createLogger({
-  transports: [new winston.transports.MongoDB(options.mongo)],
+const userLogger = createLogger({
+  transports: [
+    new transports.MongoDB({
+      ...options.mongo,
+      collection: "loguseraccess",
+    }),
+  ],
   exitOnError: false, // do not exit on handled exceptions
 });
 
-module.exports = logger;
+const webhookLogger = createLogger({
+  transports: [
+    new transports.MongoDB({
+      ...options.mongo,
+      collection: "logwebhook",
+    }),
+  ],
+  exitOnError: false, // do not exit on handled exceptions
+});
+
+module.exports = { userLogger, webhookLogger };

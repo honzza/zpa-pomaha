@@ -3,6 +3,7 @@ const HttpError = require("../models/http-error");
 const WebHook = require("../models/web-hook");
 const Activity = require("../models/activity");
 const User = require("../models/user");
+const { webhookLogger } = require("../config/winston");
 
 const createSubscription = async (req, res, next) => {
   // Your verify token. Should be a random string.
@@ -46,10 +47,24 @@ const getWebhook = async (req, res, next) => {
     event_time,
   });
 
+  const webhookLog =
+    object_type +
+    "-" +
+    object_id +
+    "-uid:" +
+    owner_id +
+    "-" +
+    aspect_type +
+    "-upd:" +
+    JSON.stringify(updates) +
+    "-tm:" +
+    event_time;
+
   try {
     await newWebhook.save();
+    webhookLogger.info("IN-" + webhookLog);
   } catch (err) {
-    console.error(err);
+    webhookLogger.error(err);
   }
   res.sendStatus(200);
   next();
@@ -61,6 +76,18 @@ const processWebhooks = async (req, res, next) => {
       .sort({ event_time: 1 })
       .exec((err, newWebhook) => {
         newWebhook.forEach(async (w) => {
+          const webhookLog =
+            w.object_type +
+            "-" +
+            w.object_id +
+            "-uid:" +
+            w.owner_id +
+            "-" +
+            w.aspect_type +
+            "-upd:" +
+            JSON.stringify(w.updates) +
+            "-tm:" +
+            w.event_time;
           try {
             // Process webhook activity event
             if (w.object_type === "activity") {
@@ -75,15 +102,15 @@ const processWebhooks = async (req, res, next) => {
                       id: w.object_id,
                     });
                   } catch (err) {
-                    console.error(err);
+                    webhookLogger.error(err);
                   }
                   if (!activity) {
                     try {
                       user = await User.findOne({ uid: w.owner_id });
                     } catch (err) {
-                      console.error(err);
+                      webhookLogger.error(err);
                     }
-                    // Refresh user token
+                    // Refresh user token (TD: if user not found - unhandled exeption)
                     if (new Date() > user.expirationATC) {
                       try {
                         const tokens = await axios.post(
@@ -93,12 +120,12 @@ const processWebhooks = async (req, res, next) => {
                         user.refreshTC = tokens.data.refresh_token;
                         user.expirationATC = tokens.data.expires_at * 1000;
                       } catch (err) {
-                        console.error(err);
+                        webhookLogger.error(err);
                       }
                       try {
                         user.save();
                       } catch (err) {
-                        console.error(err);
+                        webhookLogger.error(err);
                       }
                     }
                     // Get new activity with token up-to-date
@@ -112,7 +139,7 @@ const processWebhooks = async (req, res, next) => {
                         }
                       );
                     } catch (err) {
-                      console.error(err);
+                      webhookLogger.error(err);
                     }
                     const ah = activity.data;
                     const newActivity = {
@@ -137,29 +164,48 @@ const processWebhooks = async (req, res, next) => {
                       activity = await Activity.create(newActivity);
                       if (activity) await w.remove();
                     } catch (err) {
-                      console.error(err);
+                      webhookLogger.error(err);
+                    }
+                  } else {
+                    try {
+                      await w.remove();
+                      webhookLogger.info("DUPL-" + webhookLog);
+                    } catch (err) {
+                      webhookLogger.error(err);
                     }
                   }
                   break;
 
                 // Webhook type - UPDATE
                 case "update":
-                  try {
-                    activity = await Activity.findOne({
-                      id: w.object_id,
-                    });
-                  } catch (err) {
-                    console.error(err);
-                  }
-                  if (activity) {
-                    if (w.updates.title) activity.name = w.updates.title;
-                    if (w.updates.type) activity.type = w.updates.type;
-                    if (!w.updates.private) await w.remove();
+                  if (w.updates.title || w.updates.type) {
                     try {
-                      await activity.save();
+                      activity = await Activity.findOne({
+                        id: w.object_id,
+                      });
                     } catch (err) {
-                      console.error(err);
+                      webhookLogger.error(err);
                     }
+                    if (activity) {
+                      if (w.updates.title) activity.name = w.updates.title;
+                      if (w.updates.type) activity.type = w.updates.type;
+                      try {
+                        await activity.save();
+                      } catch (err) {
+                        webhookLogger.error(err);
+                      }
+                    } else {
+                      webhookLogger.error(
+                        `UPDATE: Activity ${w.object_id} doesn't exist`
+                      );
+                    }
+                  } else {
+                    webhookLogger.info("NOUPD-" + webhookLog);
+                  }
+                  try {
+                    await w.remove();
+                  } catch (err) {
+                    webhookLogger.error(err);
                   }
                   break;
 
@@ -169,20 +215,24 @@ const processWebhooks = async (req, res, next) => {
                     activity = await Activity.findOneAndDelete({
                       id: w.object_id,
                     });
-                    if (activity) await w.remove();
+                    if (!activity)
+                      webhookLogger.error(
+                        `DELETE: Activity ${w.object_id} doesn't exist`
+                      );
+                    await w.remove();
                   } catch (err) {
-                    console.error(err);
+                    webhookLogger.error(err);
                   }
                   break;
               }
             }
           } catch (err) {
-            console.error(err);
+            webhookLogger.error(err);
           }
         });
       });
   } catch (err) {
-    console.error(err);
+    webhookLogger.error(err);
   }
 };
 
