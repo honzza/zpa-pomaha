@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ActivityList from "../components/ActivityList";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import WarningAlert from "../components/UIElements/WarningAlert";
+import SnackMsg from "../components/UIElements/SnackMsg";
 import { useHttpClient } from "../hooks/http-hook";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -13,7 +13,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Activity = (type, label) => {
+const Activity = (props) => {
+  const { type, label } = props;
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedActivities, setLoadedActivities] = useState();
@@ -30,11 +31,11 @@ const Activity = (type, label) => {
       } catch (err) {}
     };
     fetchActivities();
-  }, [sendRequest, type]);
+  }, []);
 
   return (
     <React.Fragment>
-      {error && <WarningAlert error={error} />}
+      {error && <SnackMsg text={error} severity={"warning"} history={true} />}
       {isLoading && (
         <Backdrop className={classes.backdrop} open={isLoading}>
           <CircularProgress color="inherit" />

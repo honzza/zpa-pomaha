@@ -5,7 +5,7 @@ module.exports = {
     } else {
       res.status(401).json({
         authenticated: false,
-        message: "User has not been authenticated",
+        //  message: "User has not been authenticated",
       });
     }
   },

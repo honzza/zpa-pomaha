@@ -140,6 +140,15 @@ const processWebhooks = async (req, res, next) => {
                       );
                     } catch (err) {
                       webhookLogger.error(err);
+                      if (err.response.status === 404) {
+                        try {
+                          await w.remove();
+                          webhookLogger.info("NF404-" + webhookLog);
+                        } catch (err) {
+                          webhookLogger.error(err);
+                        }
+                        break;
+                      }
                     }
                     const ah = activity.data;
                     const newActivity = {

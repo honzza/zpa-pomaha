@@ -51,22 +51,19 @@ const useStyles = makeStyles((theme) => ({
 
 const ActivityList = (props) => {
   const classes = useStyles();
-  const activityType = props.type;
-  const activityLabel = props.label;
+  const { items, type, label } = props;
 
   //Sort by sum of Kc
-  const resultsSorted = props.items.activity.sort(
-    (a, b) => b[activityType].kc - a[activityType].kc
-  );
+  const resultsSorted = items.activity.sort((a, b) => b[type].kc - a[type].kc);
 
-  const columns = ["#", ":)", "SPORTOVEC", activityLabel, "KČ"];
+  const columns = ["#", ":)", "SPORTOVEC", label, "KČ"];
 
   const Row = (props) => {
     const {
       avatar,
       displayname,
-      [activityType]: { m },
-      [activityType]: { kc },
+      [type]: { m },
+      [type]: { kc },
     } = props.row;
 
     return (

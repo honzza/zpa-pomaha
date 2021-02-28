@@ -9,14 +9,13 @@ import {
 } from "react-router-dom";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import SnackMsg from "./components/UIElements/SnackMsg";
+import { useHttpClient } from "./hooks/http-hook";
 import { makeStyles } from "@material-ui/core/styles";
 
 const Login = React.lazy(() => import("./pages/login"));
 const User = React.lazy(() => import("./pages/user"));
-const Run = React.lazy(() => import("./pages/run"));
-const Ride = React.lazy(() => import("./pages/ride"));
-const Nski = React.lazy(() => import("./pages/nski"));
-const Swim = React.lazy(() => import("./pages/swim"));
+const Activity = React.lazy(() => import("./pages/activity"));
 const About = React.lazy(() => import("./pages/about"));
 
 const useStyles = makeStyles((theme) => ({
@@ -28,9 +27,8 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error, sendRequest } = useHttpClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  //  const [error, setError] = useState();
 
   const login = useCallback(() => {
     setIsLoggedIn(true);
@@ -42,66 +40,30 @@ function App() {
 
   // Get user login status
   useEffect(() => {
-    const sendRequest = async () => {
-      setIsLoading(true);
+    const fetchStatus = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true,
-            },
-          }
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`
         );
-        const responseData = await response.json();
         if (responseData.success === true) {
           setIsLoggedIn(true);
-          setIsLoading(false);
           return <Redirect to="/dashboard" />;
         }
-        throw new Error(responseData.message);
       } catch (err) {
-        console.log(err);
-        // setError(err.message || "Something went wrong, please try again");
-        setIsLoading(false);
         return setIsLoggedIn(false);
       }
     };
-    sendRequest();
+    fetchStatus();
   }, []);
 
   // Update activity stats
   useEffect(() => {
-    const sendRequest = async () => {
-      setIsLoading(true);
+    const updateActivities = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_PATH}/api/update`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true,
-            },
-          }
-        );
-        const responseData = await response.json();
-        setIsLoading(false);
-        if (responseData.success === false) {
-          throw new Error(responseData.message);
-        }
-      } catch (err) {
-        console.log(err);
-        // setError(err.message);
-      }
+        await sendRequest(`${process.env.REACT_APP_BACKEND_PATH}/api/update`);
+      } catch (err) {}
     };
-    sendRequest();
+    updateActivities();
   }, []);
 
   let routes;
@@ -109,12 +71,20 @@ function App() {
   if (isLoggedIn) {
     routes = (
       <Switch>
-        <Route exact path="/dashboard" component={User} />
-        <Route exact path="/run" component={Run} />
-        <Route exact path="/ride" component={Ride} />
-        <Route exact path="/nski" component={Nski} />
-        <Route exact path="/swim" component={Swim} />
-        <Route exact path="/about" component={About} />
+        <Route key={1} exact path="/dashboard" component={User} />
+        <Route key={2} exact path="/run">
+          <Activity type="run" label="BĚH" />
+        </Route>
+        <Route key={3} exact path="/ride">
+          <Activity type={"ride"} label={"CYKLO"} />
+        </Route>
+        <Route key={4} exact path="/nski">
+          <Activity type={"nski"} label={"BĚŽKY"} />
+        </Route>
+        <Route key={5} exact path="/swim">
+          <Activity type={"swim"} label={"PLAVÁNÍ"} />
+        </Route>
+        <Route key={6} exact path="/about" component={About} />
         <Redirect to="/dashboard" />
       </Switch>
     );
@@ -134,6 +104,17 @@ function App() {
       <Router>
         <MiniDrawer>
           <main>
+            {error && (
+              <SnackMsg text={error} severity={"warning"} history={true} />
+            )}
+            {isLoggedIn && (
+              <SnackMsg
+                text={
+                  "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA Pomáhá sportem!"
+                }
+                severity={"success"}
+              />
+            )}
             {isLoading && (
               <Backdrop className={classes.backdrop} open={isLoading}>
                 <CircularProgress color="inherit" />

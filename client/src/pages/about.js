@@ -13,6 +13,8 @@ import {
   CircularProgress,
   Box,
 } from "@material-ui/core";
+import SnackMsg from "../components/UIElements/SnackMsg";
+import { useHttpClient } from "../hooks/http-hook";
 
 const useStyles = makeStyles((theme) => ({
   columnPaper: {
@@ -44,44 +46,20 @@ const useStyles = makeStyles((theme) => ({
 
 const About = () => {
   const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(false);
-  //  const [error, setError] = useState();
+  const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedChanges, setLoadedChanges] = useState();
 
   useEffect(() => {
-    const sendRequest = async () => {
-      setIsLoading(true);
+    const fetchChanges = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_PATH}/api/admin`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true,
-            },
-          }
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_BACKEND_PATH}/api/admin`
         );
-        const responseData = await response.json();
-        // if (responseData.success === false) {
-        //   throw new Error(responseData.message);
-        // }
         setLoadedChanges(responseData);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        console.log(err);
-        // setError(err.message);
-      }
+      } catch (err) {}
     };
-    sendRequest();
+    fetchChanges();
   }, []);
-
-  // const errorHandler = () => {
-  //   setError(null);
-  // };
 
   const columns = ["DATUM", "VERZE", "ZMĚNA", "POPIS"];
 
@@ -112,6 +90,7 @@ const About = () => {
 
   return (
     <React.Fragment>
+      {error && <SnackMsg text={error} severity={"warning"} history={true} />}
       <TableContainer component={Paper} className={classes.container}>
         {isLoading && (
           <Backdrop className={classes.backdrop} open={isLoading}>
