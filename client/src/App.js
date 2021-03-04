@@ -29,6 +29,7 @@ function App() {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedUser, setLoggedUser] = useState();
 
   const login = useCallback(() => {
     setIsLoggedIn(true);
@@ -47,6 +48,10 @@ function App() {
         );
         if (responseData.success === true) {
           setIsLoggedIn(true);
+          setLoggedUser({
+            name: responseData.user.firstname,
+            avatar: responseData.user.avatar,
+          });
           return <Redirect to="/dashboard" />;
         }
       } catch (err) {
@@ -71,18 +76,20 @@ function App() {
   if (isLoggedIn) {
     routes = (
       <Switch>
-        <Route key={1} exact path="/dashboard" component={User} />
+        <Route key={1} exact path="/dashboard">
+          <User user={loggedUser} />
+        </Route>
         <Route key={2} exact path="/run">
-          <Activity type="run" label="BĚH" />
+          <Activity type="run" label="BĚH" user={loggedUser} />
         </Route>
         <Route key={3} exact path="/ride">
-          <Activity type={"ride"} label={"CYKLO"} />
+          <Activity type={"ride"} label={"CYKLO"} user={loggedUser} />
         </Route>
         <Route key={4} exact path="/nski">
-          <Activity type={"nski"} label={"BĚŽKY"} />
+          <Activity type={"nski"} label={"BĚŽKY"} user={loggedUser} />
         </Route>
         <Route key={5} exact path="/swim">
-          <Activity type={"swim"} label={"PLAVÁNÍ"} />
+          <Activity type={"swim"} label={"PLAVÁNÍ"} user={loggedUser} />
         </Route>
         <Route key={6} exact path="/about" component={About} />
         <Redirect to="/dashboard" />
@@ -102,37 +109,39 @@ function App() {
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
     >
       <Router>
-        <MiniDrawer>
-          <main>
-            {error && (
-              <SnackMsg text={error} severity={"warning"} history={true} />
-            )}
-            {isLoggedIn && (
-              <SnackMsg
-                text={
-                  "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA Pomáhá sportem!"
-                }
-                severity={"success"}
-              />
-            )}
-            {isLoading && (
-              <Backdrop className={classes.backdrop} open={isLoading}>
-                <CircularProgress color="inherit" />
-              </Backdrop>
-            )}
-            {!isLoading && (
-              <Suspense
-                fallback={
-                  <Backdrop className={classes.backdrop} open={isLoading}>
-                    <CircularProgress color="inherit" />
-                  </Backdrop>
-                }
-              >
-                {routes}
-              </Suspense>
-            )}
-          </main>
-        </MiniDrawer>
+        {loggedUser && (
+          <MiniDrawer user={loggedUser}>
+            <main>
+              {error && (
+                <SnackMsg text={error} severity={"warning"} history={true} />
+              )}
+              {isLoggedIn && (
+                <SnackMsg
+                  text={
+                    "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA Pomáhá sportem!"
+                  }
+                  severity={"success"}
+                />
+              )}
+              {isLoading && (
+                <Backdrop className={classes.backdrop} open={isLoading}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              )}
+              {!isLoading && (
+                <Suspense
+                  fallback={
+                    <Backdrop className={classes.backdrop} open={isLoading}>
+                      <CircularProgress color="inherit" />
+                    </Backdrop>
+                  }
+                >
+                  {routes}
+                </Suspense>
+              )}
+            </main>
+          </MiniDrawer>
+        )}
       </Router>
     </AuthContext.Provider>
   );

@@ -18,6 +18,7 @@ const Activity = (props) => {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedActivities, setLoadedActivities] = useState();
+  const name = props.user.name;
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -42,7 +43,12 @@ const Activity = (props) => {
         </Backdrop>
       )}
       {!isLoading && loadedActivities && (
-        <ActivityList items={loadedActivities} type={type} label={label} />
+        <ActivityList
+          items={loadedActivities}
+          type={type}
+          label={label}
+          name={name}
+        />
       )}
     </React.Fragment>
   );

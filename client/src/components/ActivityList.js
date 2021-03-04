@@ -47,11 +47,17 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
+  highlight: {
+    background: "#ffcdb5",
+  },
+  nohighlight: {
+    background: "inherit",
+  },
 }));
 
 const ActivityList = (props) => {
   const classes = useStyles();
-  const { items, type, label } = props;
+  const { items, type, label, name } = props;
 
   //Sort by sum of Kc
   const resultsSorted = items.activity.sort((a, b) => b[type].kc - a[type].kc);
@@ -61,13 +67,18 @@ const ActivityList = (props) => {
   const Row = (props) => {
     const {
       avatar,
+      firstname,
       displayname,
       [type]: { m },
       [type]: { kc },
     } = props.row;
 
     return (
-      <TableRow key={props.index + 1} hover>
+      <TableRow
+        key={props.index + 1}
+        hover
+        className={firstname === name ? classes.highlight : classes.nohighlight}
+      >
         <TableCell align="center" component="th" scope="row">
           {props.index + 1}
         </TableCell>

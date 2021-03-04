@@ -13,10 +13,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const User = () => {
+const User = (props) => {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
+  const name = props.user.name;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -40,7 +41,9 @@ const User = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
+      {!isLoading && loadedUsers && (
+        <UsersList items={loadedUsers} name={name} />
+      )}
     </React.Fragment>
   );
 };

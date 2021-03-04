@@ -33,11 +33,6 @@ const formatterKM = new Intl.NumberFormat("cs-CZ", {
 });
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      borderBottom: "unset",
-    },
-  },
   kmPaper: {
     backgroundColor: "#ebebeb",
     padding: "2px",
@@ -70,13 +65,26 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
+  highlight: {
+    background: "#ffcdb5",
+    "& > *": {
+      borderBottom: "unset",
+    },
+  },
+  nohighlight: {
+    background: "inherit",
+    "& > *": {
+      borderBottom: "unset",
+    },
+  },
 }));
 
 const UserList = (props) => {
   const classes = useStyles();
+  const { items, name } = props;
 
   //Prepare data, sort by sum of Kc
-  const results = props.items.users.map((user) => {
+  const results = items.users.map((user) => {
     return {
       ...user,
       kcTotal:
@@ -142,6 +150,7 @@ const UserList = (props) => {
     const [open, setOpen] = React.useState(false);
     const {
       avatar,
+      firstname,
       displayname,
       activity: {
         run: { m: runKM },
@@ -172,7 +181,13 @@ const UserList = (props) => {
 
     return (
       <React.Fragment>
-        <TableRow key={props.index + 1} hover className={classes.root}>
+        <TableRow
+          key={props.index + 1}
+          hover
+          className={
+            firstname === name ? classes.highlight : classes.nohighlight
+          }
+        >
           <TableCell>
             <IconButton
               aria-label="expand row"

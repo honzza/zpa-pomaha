@@ -16,6 +16,7 @@ import {
   ListItemIcon,
   ListItemText,
   Link,
+  Avatar,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -37,6 +38,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    flexGrow: 1,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -94,6 +96,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  avatar: {
+    marginRight: "15px",
+  },
 }));
 
 export default function MiniDrawer(props) {
@@ -119,6 +124,8 @@ export default function MiniDrawer(props) {
     { text: "O aplikaci", link: "/about", icon: <InfoOutlinedIcon /> },
   ];
 
+  const { name, avatar } = props.user;
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -142,9 +149,16 @@ export default function MiniDrawer(props) {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap className={classes.root}>
             ZPA Pomáhá sportem
           </Typography>
+          <Avatar
+            alt={name}
+            src={avatar}
+            variant="rounded"
+            className={classes.avatar}
+          />
+          <Typography variant="h6">{name}</Typography>
         </Toolbar>
       </AppBar>
       {auth.isLoggedIn && (
