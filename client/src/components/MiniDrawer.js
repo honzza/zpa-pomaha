@@ -152,12 +152,14 @@ export default function MiniDrawer(props) {
           <Typography variant="h6" noWrap className={classes.root}>
             ZPA Pomáhá sportem
           </Typography>
-          <Avatar
-            alt={name}
-            src={avatar}
-            variant="rounded"
-            className={classes.avatar}
-          />
+          {avatar && (
+            <Avatar
+              alt={name}
+              src={avatar}
+              variant="rounded"
+              className={classes.avatar}
+            />
+          )}
           <Typography variant="h6">{name}</Typography>
         </Toolbar>
       </AppBar>

@@ -29,7 +29,10 @@ function App() {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedUser, setLoggedUser] = useState();
+  const [loggedUser, setLoggedUser] = useState({
+    name: "",
+    avatar: "",
+  });
 
   const login = useCallback(() => {
     setIsLoggedIn(true);
