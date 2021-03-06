@@ -13,6 +13,8 @@ import {
   Typography,
   Paper,
   Avatar,
+  Divider,
+  Grid,
 } from "@material-ui/core";
 
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -228,10 +230,29 @@ const UserList = (props) => {
         <TableRow className={classes.detailRow}>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box margin={1}>
-                <Typography variant="subtitle1" gutterBottom component="div">
-                  Tady budou další statistiky
-                </Typography>
+              <Box margin={2}>
+                <Grid container spacing={3} alignItems="center">
+                  <Grid item xs>
+                    Podíl na celkové částce
+                  </Grid>
+                  <Grid item xs>
+                    {`${Math.round((kcTotal / sumKc) * 1000) / 10}%`}
+                  </Grid>
+                  <Divider orientation="vertical" flexItem />
+                  <Grid item xs>
+                    Další statistika
+                  </Grid>
+                  <Grid item xs>
+                    Hodnota
+                  </Grid>
+                  <Divider orientation="vertical" flexItem />
+                  <Grid item xs>
+                    Další statistika
+                  </Grid>
+                  <Grid item xs>
+                    Hodnota
+                  </Grid>
+                </Grid>
               </Box>
             </Collapse>
           </TableCell>
