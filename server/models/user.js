@@ -29,6 +29,8 @@ const userSchema = new Schema({
       kc: { type: Number, required: false },
     },
   },
+  numactivities: { type: Number, required: false },
+  validactivities: { type: Number, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   active: { type: Boolean, required: true },

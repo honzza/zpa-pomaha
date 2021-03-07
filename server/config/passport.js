@@ -35,6 +35,8 @@ module.exports = function (passport) {
             nski: { m: 0, kc: 0 },
           },
           active: true,
+          numactivities: 0,
+          validactivities: 0,
         };
         // Check if logging athlete is member of selected club
         try {

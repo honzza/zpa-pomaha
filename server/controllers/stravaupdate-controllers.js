@@ -10,14 +10,28 @@ const updateAthletes = async (req, res, next) => {
         u.activity.run.m = 0;
         u.activity.swim.m = 0;
         u.activity.nski.m = 0;
+        u.validactivities = 0;
+        u.numactivities = 0;
         await Activity.find({ athlete_id: u.uid }).exec(
           async (err, foundActivity) => {
             foundActivity.forEach((a) => {
-              if (a.type === "Ride") u.activity.ride.m += a.distance;
-              if (a.type === "Run") u.activity.run.m += a.distance;
-              if (a.type === "Swim") u.activity.swim.m += a.distance;
-              if (a.type === "NordicSki" || a.type === "BackcountrySki")
+              if (a.type === "Ride") {
+                u.activity.ride.m += a.distance;
+                u.validactivities++;
+              }
+              if (a.type === "Run") {
+                u.activity.run.m += a.distance;
+                u.validactivities++;
+              }
+              if (a.type === "Swim") {
+                u.activity.swim.m += a.distance;
+                u.validactivities++;
+              }
+              if (a.type === "NordicSki" || a.type === "BackcountrySki") {
                 u.activity.nski.m += a.distance;
+                u.validactivities++;
+              }
+              u.numactivities++;
             });
             u.activity.ride.kc =
               (u.activity.ride.m / 1000) * process.env.RIDE_KC;

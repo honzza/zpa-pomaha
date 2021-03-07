@@ -13,7 +13,6 @@ import {
   Typography,
   Paper,
   Avatar,
-  Divider,
   Grid,
 } from "@material-ui/core";
 
@@ -78,6 +77,16 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       borderBottom: "unset",
     },
+  },
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    display: "flex",
+    justifyContent: "space-around",
   },
 }));
 
@@ -148,6 +157,32 @@ const UserList = (props) => {
     );
   };
 
+  const FormRow = (props) => {
+    const { stat1, stat2, stat3 } = props;
+    return (
+      <React.Fragment>
+        <Grid item xs={4}>
+          <Paper className={classes.paper}>
+            <Box>{stat1.text}</Box>
+            <Box>{stat1.value}</Box>
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper className={classes.paper}>
+            <Box>{stat2.text}</Box>
+            <Box>{stat2.value}</Box>
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper className={classes.paper}>
+            <Box>{stat3.text}</Box>
+            <Box>{stat3.value}</Box>
+          </Paper>
+        </Grid>
+      </React.Fragment>
+    );
+  };
+
   const Row = (props) => {
     const [open, setOpen] = React.useState(false);
     const {
@@ -179,6 +214,8 @@ const UserList = (props) => {
         swim: { kc: swimKC },
       },
       kcTotal,
+      numactivities,
+      validactivities,
     } = props.row;
 
     return (
@@ -231,28 +268,57 @@ const UserList = (props) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={2}>
-                <Grid container spacing={3} alignItems="center">
-                  <Grid item xs>
-                    Podíl na celkové částce
+                <div className={classes.root}>
+                  <Grid container spacing={1}>
+                    <Grid container item xs={12} spacing={3}>
+                      <FormRow
+                        stat1={{
+                          text: "Podíl na celkové částce",
+                          value:
+                            Math.round((kcTotal / sumKc) * 1000) / 10 + "%",
+                        }}
+                        stat2={{
+                          text: "Celkový počet aktivit",
+                          value: numactivities,
+                        }}
+                        stat3={{
+                          text: "Započitatelné aktivity",
+                          value: validactivities,
+                        }}
+                      />
+                    </Grid>
+                    <Grid container item xs={12} spacing={3}>
+                      <FormRow
+                        stat1={{
+                          text: "Podíl započitatelných aktivit",
+                          value:
+                            Math.round(
+                              (validactivities / numactivities) * 1000
+                            ) /
+                              10 +
+                            "%",
+                        }}
+                        stat2={{
+                          text: "Výdělek na aktivitu",
+                          value:
+                            Math.round((kcTotal / validactivities) * 10) / 10 +
+                            " Kč",
+                        }}
+                        stat3={{
+                          text: "Km na aktivitu",
+                          value:
+                            Math.round(
+                              (runKM + rideKM + swimKM + nskiKM) /
+                                validactivities /
+                                100
+                            ) /
+                              10 +
+                            " km",
+                        }}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs>
-                    {`${Math.round((kcTotal / sumKc) * 1000) / 10}%`}
-                  </Grid>
-                  <Divider orientation="vertical" flexItem />
-                  <Grid item xs>
-                    Další statistika
-                  </Grid>
-                  <Grid item xs>
-                    Hodnota
-                  </Grid>
-                  <Divider orientation="vertical" flexItem />
-                  <Grid item xs>
-                    Další statistika
-                  </Grid>
-                  <Grid item xs>
-                    Hodnota
-                  </Grid>
-                </Grid>
+                </div>
               </Box>
             </Collapse>
           </TableCell>
