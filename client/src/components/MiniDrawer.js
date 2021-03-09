@@ -27,6 +27,7 @@ import DirectionsRunOutlinedIcon from "@material-ui/icons/DirectionsRunOutlined"
 import DirectionsBikeOutlinedIcon from "@material-ui/icons/DirectionsBikeOutlined";
 import AcUnitOutlinedIcon from "@material-ui/icons/AcUnitOutlined";
 import PoolOutlinedIcon from "@material-ui/icons/PoolOutlined";
+import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 
@@ -121,6 +122,11 @@ export default function MiniDrawer(props) {
     { text: "Cyklo", link: "/ride", icon: <DirectionsBikeOutlinedIcon /> },
     { text: "Běžky", link: "/nski", icon: <AcUnitOutlinedIcon /> },
     { text: "Plavání", link: "/swim", icon: <PoolOutlinedIcon /> },
+    {
+      text: "Pomáháme",
+      link: "/charity",
+      icon: <FavoriteBorderOutlinedIcon />,
+    },
     { text: "O aplikaci", link: "/about", icon: <InfoOutlinedIcon /> },
   ];
 
@@ -150,7 +156,7 @@ export default function MiniDrawer(props) {
             </IconButton>
           )}
           <Typography variant="h6" noWrap className={classes.root}>
-            ZPA Pomáhá sportem
+            ZPA Pomáhá sportem - {new Date().getFullYear() - 2018 + 1}. ročník
           </Typography>
           {avatar && (
             <Avatar

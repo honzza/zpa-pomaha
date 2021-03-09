@@ -1,5 +1,5 @@
 date;version;type;description
-;;plán;Stránka s popisem pro koho sportujeme. Přehled o historických projektech a kolik se "nasportovalo" km a kč.
+09.03.2021;2.5.0;přidáno;Stránka s popisem pro koho sportujeme. Přehled o historických projektech a kolik se "nasportovalo" km a kč. Opravy chyb a drobná vylepšení.
 07.03.2021;2.4.0;přidáno;Detailní statistiky sportovce
 06.03.2021;2.3.0;přidáno;Procentuální podíl na celkové částce
 05.03.2021;2.2.1;opraveno;Chyba zobrazení přihlašovací stránky

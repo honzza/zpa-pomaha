@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const Login = React.lazy(() => import("./pages/login"));
 const User = React.lazy(() => import("./pages/user"));
 const Activity = React.lazy(() => import("./pages/activity"));
+const Charity = React.lazy(() => import("./pages/charity"));
 const About = React.lazy(() => import("./pages/about"));
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +55,7 @@ function App() {
           setLoggedUser({
             name: responseData.user.firstname,
             avatar: responseData.user.avatar,
+            uid: responseData.user.uid,
           });
           return <Redirect to="/dashboard" />;
         }
@@ -94,7 +96,8 @@ function App() {
         <Route key={5} exact path="/swim">
           <Activity type={"swim"} label={"PLAVÁNÍ"} user={loggedUser} />
         </Route>
-        <Route key={6} exact path="/about" component={About} />
+        <Route key={6} exact path="/charity" component={Charity} />
+        <Route key={7} exact path="/about" component={About} />
         <Redirect to="/dashboard" />
       </Switch>
     );

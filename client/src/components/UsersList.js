@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
@@ -78,9 +78,6 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: "unset",
     },
   },
-  root: {
-    flexGrow: 1,
-  },
   paper: {
     padding: theme.spacing(1),
     textAlign: "center",
@@ -92,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserList = (props) => {
   const classes = useStyles();
-  const { items, name } = props;
+  const { items, uidLogged } = props;
 
   //Prepare data, sort by sum of Kc
   const results = items.users.map((user) => {
@@ -184,10 +181,10 @@ const UserList = (props) => {
   };
 
   const Row = (props) => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const {
       avatar,
-      firstname,
+      uid,
       displayname,
       activity: {
         run: { m: runKM },
@@ -224,7 +221,7 @@ const UserList = (props) => {
           key={props.index + 1}
           hover
           className={
-            firstname === name ? classes.highlight : classes.nohighlight
+            uid === uidLogged ? classes.highlight : classes.nohighlight
           }
         >
           <TableCell>
@@ -268,57 +265,52 @@ const UserList = (props) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={2}>
-                <div className={classes.root}>
-                  <Grid container spacing={1}>
-                    <Grid container item xs={12} spacing={3}>
-                      <FormRow
-                        stat1={{
-                          text: "Podíl na celkové částce",
-                          value:
-                            Math.round((kcTotal / sumKc) * 1000) / 10 + "%",
-                        }}
-                        stat2={{
-                          text: "Celkový počet aktivit",
-                          value: numactivities,
-                        }}
-                        stat3={{
-                          text: "Započitatelné aktivity",
-                          value: validactivities,
-                        }}
-                      />
-                    </Grid>
-                    <Grid container item xs={12} spacing={3}>
-                      <FormRow
-                        stat1={{
-                          text: "Podíl započitatelných aktivit",
-                          value:
-                            Math.round(
-                              (validactivities / numactivities) * 1000
-                            ) /
-                              10 +
-                            "%",
-                        }}
-                        stat2={{
-                          text: "Výdělek na aktivitu",
-                          value:
-                            Math.round((kcTotal / validactivities) * 10) / 10 +
-                            " Kč",
-                        }}
-                        stat3={{
-                          text: "Km na aktivitu",
-                          value:
-                            Math.round(
-                              (runKM + rideKM + swimKM + nskiKM) /
-                                validactivities /
-                                100
-                            ) /
-                              10 +
-                            " km",
-                        }}
-                      />
-                    </Grid>
+                <Grid container spacing={1}>
+                  <Grid container item xs={12} spacing={3}>
+                    <FormRow
+                      stat1={{
+                        text: "Podíl na celkové částce",
+                        value: Math.round((kcTotal / sumKc) * 1000) / 10 + "%",
+                      }}
+                      stat2={{
+                        text: "Celkový počet aktivit",
+                        value: numactivities,
+                      }}
+                      stat3={{
+                        text: "Km na aktivitu",
+                        value:
+                          Math.round(
+                            (runKM + rideKM + swimKM + nskiKM) /
+                              validactivities /
+                              100
+                          ) /
+                            10 +
+                          " km",
+                      }}
+                    />
                   </Grid>
-                </div>
+                  <Grid container item xs={12} spacing={3}>
+                    <FormRow
+                      stat1={{
+                        text: "Podíl započitatelných aktivit",
+                        value:
+                          Math.round((validactivities / numactivities) * 1000) /
+                            10 +
+                          "%",
+                      }}
+                      stat2={{
+                        text: "Započitatelné aktivity",
+                        value: validactivities,
+                      }}
+                      stat3={{
+                        text: "Výdělek na aktivitu",
+                        value:
+                          Math.round((kcTotal / validactivities) * 10) / 10 +
+                          " Kč",
+                      }}
+                    />
+                  </Grid>
+                </Grid>
               </Box>
             </Collapse>
           </TableCell>

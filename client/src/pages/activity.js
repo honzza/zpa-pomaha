@@ -18,7 +18,7 @@ const Activity = (props) => {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedActivities, setLoadedActivities] = useState();
-  const name = props.user.name;
+  const uid = props.user.uid;
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -47,7 +47,7 @@ const Activity = (props) => {
           items={loadedActivities}
           type={type}
           label={label}
-          name={name}
+          uidLogged={uid}
         />
       )}
     </React.Fragment>

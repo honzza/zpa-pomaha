@@ -11,12 +11,11 @@ router.get("/login/success", (req, res) => {
       success: true,
       message: "User has successfully authenticated",
       user: req.user,
-      // cookies: req.cookies - k čemu dobré?
     });
   } else {
     res.status(401).json({
       success: false,
-      message: "User not authenticated", //tohle asi probublává
+      //   message: "User not authenticated",
     });
   }
 });

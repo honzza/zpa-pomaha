@@ -25,6 +25,7 @@ const getActivityByType = async (req, res, next) => {
   }
   const result = activities.map((a) => {
     return {
+      uid: a.uid,
       firstname: a.firstname,
       lastname: a.lastname,
       displayname: a.displayname,

@@ -17,7 +17,7 @@ const User = (props) => {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
-  const name = props.user.name;
+  const uid = props.user.uid;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -42,7 +42,7 @@ const User = (props) => {
         </Backdrop>
       )}
       {!isLoading && loadedUsers && (
-        <UsersList items={loadedUsers} name={name} />
+        <UsersList items={loadedUsers} uidLogged={uid} />
       )}
     </React.Fragment>
   );

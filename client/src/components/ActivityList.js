@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ActivityList = (props) => {
   const classes = useStyles();
-  const { items, type, label, name } = props;
+  const { items, type, label, uidLogged } = props;
 
   //Sort by sum of Kc
   const resultsSorted = items.activity.sort((a, b) => b[type].kc - a[type].kc);
@@ -67,7 +67,7 @@ const ActivityList = (props) => {
   const Row = (props) => {
     const {
       avatar,
-      firstname,
+      uid,
       displayname,
       [type]: { m },
       [type]: { kc },
@@ -77,7 +77,7 @@ const ActivityList = (props) => {
       <TableRow
         key={props.index + 1}
         hover
-        className={firstname === name ? classes.highlight : classes.nohighlight}
+        className={uid === uidLogged ? classes.highlight : classes.nohighlight}
       >
         <TableCell align="center" component="th" scope="row">
           {props.index + 1}
