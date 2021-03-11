@@ -36,12 +36,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Footer = () => {
+const Footer = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const uid = props.uid;
 
   const handleOpen = () => {
-    setOpen(true);
+    uid === 20023846 && setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
@@ -51,12 +52,12 @@ const Footer = () => {
     <React.Fragment>
       <Box textAlign="center" mt="15px">
         <Typography variant="subtitle2" className={classes.text}>
-          made with{" "}
+          made with
           <button type="button" onClick={handleOpen} className={classes.button}>
             <span role="img" aria-label="beer-emoji">
               🍺
-            </span>{" "}
-          </button>{" "}
+            </span>
+          </button>
           by honzza dvorak {new Date().getFullYear()}
         </Typography>
       </Box>

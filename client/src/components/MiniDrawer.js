@@ -130,7 +130,7 @@ export default function MiniDrawer(props) {
     { text: "O aplikaci", link: "/about", icon: <InfoOutlinedIcon /> },
   ];
 
-  const { name, avatar } = props.user;
+  const { name, avatar, uid } = props.user;
 
   return (
     <div className={classes.root}>
@@ -156,7 +156,7 @@ export default function MiniDrawer(props) {
             </IconButton>
           )}
           <Typography variant="h6" noWrap className={classes.root}>
-            ZPA Pomáhá sportem - {new Date().getFullYear() - 2018 + 1}. ročník
+            ZPA pomáhá sportem - {new Date().getFullYear() - 2018 + 1}. ročník
           </Typography>
           {avatar && (
             <Avatar
@@ -223,7 +223,7 @@ export default function MiniDrawer(props) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {props.children}
-        <Footer />
+        <Footer uid={uid} />
       </main>
     </div>
   );

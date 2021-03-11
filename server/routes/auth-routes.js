@@ -7,6 +7,7 @@ const { userLogger } = require("../config/winston");
 router.get("/login/success", (req, res) => {
   if (req.user) {
     userLogger.info(req.user.displayname);
+    console.info(req.user.displayname);
     res.json({
       success: true,
       message: "User has successfully authenticated",

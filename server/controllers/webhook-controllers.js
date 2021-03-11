@@ -63,8 +63,14 @@ const getWebhook = async (req, res, next) => {
   try {
     await newWebhook.save();
     webhookLogger.info("IN-" + webhookLog);
+    console.info({
+      message: "Incoming webhook",
+      status: 201,
+      webhook: newWebhook,
+    });
   } catch (err) {
     webhookLogger.error(err);
+    console.error(err);
   }
   res.sendStatus(200);
   next();
@@ -103,12 +109,14 @@ const processWebhooks = async (req, res, next) => {
                     });
                   } catch (err) {
                     webhookLogger.error(err);
+                    console.error(err);
                   }
                   if (!activity) {
                     try {
                       user = await User.findOne({ uid: w.owner_id });
                     } catch (err) {
                       webhookLogger.error(err);
+                      console.error(err);
                     }
                     // Refresh user token (TD: if user not found - unhandled exeption)
                     if (new Date() > user.expirationATC) {
@@ -121,11 +129,13 @@ const processWebhooks = async (req, res, next) => {
                         user.expirationATC = tokens.data.expires_at * 1000;
                       } catch (err) {
                         webhookLogger.error(err);
+                        console.error(err);
                       }
                       try {
                         user.save();
                       } catch (err) {
                         webhookLogger.error(err);
+                        console.error(err);
                       }
                     }
                     // Get new activity with token up-to-date
@@ -140,12 +150,19 @@ const processWebhooks = async (req, res, next) => {
                       );
                     } catch (err) {
                       webhookLogger.error(err);
+                      console.error(err);
                       if (err.response.status === 404) {
                         try {
                           await w.remove();
                           webhookLogger.info("NF404-" + webhookLog);
+                          console.warn({
+                            message: "CREATE: Activity doesn't exist on Strava",
+                            status: 404,
+                            webhook: newWebhook,
+                          });
                         } catch (err) {
                           webhookLogger.error(err);
+                          console.error(err);
                         }
                         break;
                       }
@@ -174,13 +191,20 @@ const processWebhooks = async (req, res, next) => {
                       if (activity) await w.remove();
                     } catch (err) {
                       webhookLogger.error(err);
+                      console.error(err);
                     }
                   } else {
                     try {
                       await w.remove();
                       webhookLogger.info("DUPL-" + webhookLog);
+                      console.warn({
+                        message: "CREATE: Activity already exists",
+                        status: 304,
+                        webhook: newWebhook,
+                      });
                     } catch (err) {
                       webhookLogger.error(err);
+                      console.error(err);
                     }
                   }
                   break;
@@ -194,6 +218,7 @@ const processWebhooks = async (req, res, next) => {
                       });
                     } catch (err) {
                       webhookLogger.error(err);
+                      console.error(err);
                     }
                     if (activity) {
                       if (w.updates.title) activity.name = w.updates.title;
@@ -202,19 +227,31 @@ const processWebhooks = async (req, res, next) => {
                         await activity.save();
                       } catch (err) {
                         webhookLogger.error(err);
+                        console.error(err);
                       }
                     } else {
                       webhookLogger.error(
                         `UPDATE: Activity ${w.object_id} doesn't exist`
                       );
+                      console.warn({
+                        message: `UPDATE: Activity ${w.object_id} doesn't exist`,
+                        status: 404,
+                        webhook: newWebhook,
+                      });
                     }
                   } else {
                     webhookLogger.info("NOUPD-" + webhookLog);
+                    console.warn({
+                      message: "UPDATE: Nothing to update",
+                      status: 304,
+                      webhook: newWebhook,
+                    });
                   }
                   try {
                     await w.remove();
                   } catch (err) {
                     webhookLogger.error(err);
+                    console.error(err);
                   }
                   break;
 
@@ -224,24 +261,33 @@ const processWebhooks = async (req, res, next) => {
                     activity = await Activity.findOneAndDelete({
                       id: w.object_id,
                     });
-                    if (!activity)
+                    if (!activity) {
                       webhookLogger.error(
                         `DELETE: Activity ${w.object_id} doesn't exist`
                       );
+                      console.warn({
+                        message: `DELETE: Activity ${w.object_id} doesn't exist`,
+                        status: 404,
+                        webhook: newWebhook,
+                      });
+                    }
                     await w.remove();
                   } catch (err) {
                     webhookLogger.error(err);
+                    console.error(err);
                   }
                   break;
               }
             }
           } catch (err) {
             webhookLogger.error(err);
+            console.error(err);
           }
         });
       });
   } catch (err) {
     webhookLogger.error(err);
+    console.error(err);
   }
 };
 
