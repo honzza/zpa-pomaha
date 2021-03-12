@@ -16,7 +16,6 @@ const options = {
 
 // instantiate a new Winston Logger with the settings defined above
 const userLogger = createLogger({
-  format: winston.format.json(),
   transports: [
     new transports.MongoDB({
       ...options.mongo,
