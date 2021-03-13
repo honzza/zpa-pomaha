@@ -1,4 +1,5 @@
-const { createLogger, transports } = require("winston");
+const { createLogger, transports, format } = require("winston");
+const { combine, metadata } = format;
 require("winston-mongodb");
 
 // define the custom settings for each transport (file, console, mongodb)
@@ -16,6 +17,9 @@ const options = {
 
 // instantiate a new Winston Logger with the settings defined above
 const userLogger = createLogger({
+  format: combine(
+    metadata({ fillExcept: ["message", "timestamp", "level", "label"] })
+  ),
   transports: [
     new transports.MongoDB({
       ...options.mongo,
@@ -26,6 +30,9 @@ const userLogger = createLogger({
 });
 
 const webhookLogger = createLogger({
+  format: combine(
+    metadata({ fillExcept: ["message", "timestamp", "level", "label"] })
+  ),
   transports: [
     new transports.MongoDB({
       ...options.mongo,

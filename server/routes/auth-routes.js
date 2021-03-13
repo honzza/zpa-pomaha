@@ -6,10 +6,7 @@ const { userLogger } = require("../config/winston");
 // when login is successful, retrieve user info
 router.get("/login/success", (req, res) => {
   if (req.user) {
-    userLogger.info(
-      JSON.stringify({ user: req.user.displayname, status: 200 })
-    );
-    console.info(JSON.stringify({ user: req.user.displayname, status: 200 }));
+    userLogger.info("login", { user: req.user.displayname });
     res.json({
       success: true,
       message: "User has successfully authenticated",

@@ -83,8 +83,8 @@ const Footer = (props) => {
           </Toolbar>
         </AppBar>
         <Paper className={classes.paper} elevation={1}>
-          Právě jsi našel(-la) tzv. Easter Egg. Tohle okno není pro běžné
-          uživatele, slouží pouze pro ladění aplikace.
+          počet webhooku, logwebhook stat, loguseraccess-login 7 dní dozadu, all
+          time bests users
         </Paper>
       </Dialog>
     </React.Fragment>
