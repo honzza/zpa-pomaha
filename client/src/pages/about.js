@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#C6E2FF",
   },
   container: {
-    maxHeight: "80vh",
+    maxHeight: "64vh",
   },
   headCell: {
     verticalAlign: "top",

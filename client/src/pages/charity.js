@@ -1,7 +1,20 @@
 import React, { useState } from "react";
 //import PropTypes from 'prop-types';
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Tabs, Tab, Typography, Box } from "@material-ui/core";
+import {
+  AppBar,
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableContainer,
+  TableHead,
+  Paper,
+} from "@material-ui/core";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     backgroundColor: theme.palette.background.paper,
   },
+  text: {
+    marginBottom: "20px",
+  },
+  head: {
+    backgroundColor: "#ebebeb",
+  },
 }));
 
 const Charity = () => {
@@ -72,7 +91,32 @@ const Charity = () => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Jak Pomáháme
+        <Typography className={classes.text}>
+          Sportujeme a naše nasportované kilometry ZPA převádí na peníze. Tyto
+          peníze pak věnujeme někomu, kdo je potřebuje nebo na projekt, kde
+          pomohou změnit věci k lepšímu. Následující tabulka uvádí poměry
+          kilometrů na koruny pro jednotlivé aktivity.
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table aria-label="km to kc table">
+            <TableHead>
+              <TableRow className={classes.head}>
+                <TableCell align="center">BĚH</TableCell>
+                <TableCell align="center">CYKLO</TableCell>
+                <TableCell align="center">BĚŽKY</TableCell>
+                <TableCell align="center">PLAVÁNÍ</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow key={1}>
+                <TableCell align="center">1 km = 1 Kč</TableCell>
+                <TableCell align="center">2,5 km = 1 Kč</TableCell>
+                <TableCell align="center">1,5 km = 1 Kč</TableCell>
+                <TableCell align="center">1 km = 4 Kč</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </TabPanel>
       <TabPanel value={value} index={1}>
         2021

@@ -51,7 +51,7 @@ const getWebhook = async (req, res, next) => {
     await newWebhook.save();
     webhookLogger.info("Incoming webhook", {
       status: 201,
-      webhook: newWebhook.toObject(),
+      webhook: newWebhook.toObject({ versionKey: false }),
     });
   } catch (err) {
     webhookLogger.error(err);
@@ -124,7 +124,7 @@ const processWebhooks = async (req, res, next) => {
                             {
                               type: "create",
                               status: 404,
-                              webhook: w.toObject(),
+                              webhook: w.toObject({ versionKey: false }),
                             }
                           );
                           await w.remove();
@@ -167,7 +167,7 @@ const processWebhooks = async (req, res, next) => {
                       webhookLogger.warn("Activity already exists", {
                         type: "create",
                         status: 304,
-                        webhook: w.toObject(),
+                        webhook: w.toObject({ versionKey: false }),
                       });
                     } catch (err) {
                       webhookLogger.error(err);
@@ -199,7 +199,7 @@ const processWebhooks = async (req, res, next) => {
                         {
                           type: "update",
                           status: 404,
-                          webhook: w.toObject(),
+                          webhook: w.toObject({ versionKey: false }),
                         }
                       );
                     }
@@ -207,7 +207,7 @@ const processWebhooks = async (req, res, next) => {
                     webhookLogger.warn("Nothing to update", {
                       type: "update",
                       status: 304,
-                      webhook: w.toObject(),
+                      webhook: w.toObject({ versionKey: false }),
                     });
                   }
                   try {
@@ -229,7 +229,7 @@ const processWebhooks = async (req, res, next) => {
                         {
                           type: "delete",
                           status: 404,
-                          webhook: w.toObject(),
+                          webhook: w.toObject({ versionKey: false }),
                         }
                       );
                     await w.remove();

@@ -124,7 +124,7 @@ function App() {
               {isLoggedIn && (
                 <SnackMsg
                   text={
-                    "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA Pomáhá sportem!"
+                    "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA pomáhá sportem!"
                   }
                   severity={"success"}
                 />
