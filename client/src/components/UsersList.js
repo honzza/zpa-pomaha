@@ -13,7 +13,6 @@ import {
   Typography,
   Paper,
   Avatar,
-  Grid,
 } from "@material-ui/core";
 
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -77,13 +76,6 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       borderBottom: "unset",
     },
-  },
-  paper: {
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    display: "flex",
-    justifyContent: "space-around",
   },
 }));
 
@@ -151,32 +143,6 @@ const UserList = (props) => {
           <Paper className={classes.kcPaper}>{formatterCU.format(kc)}</Paper>
         </Box>
       </TableCell>
-    );
-  };
-
-  const FormRow = (props) => {
-    const { stat1, stat2, stat3 } = props;
-    return (
-      <React.Fragment>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>
-            <Box>{stat1.text}</Box>
-            <Box>{stat1.value}</Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>
-            <Box>{stat2.text}</Box>
-            <Box>{stat2.value}</Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>
-            <Box>{stat3.text}</Box>
-            <Box>{stat3.value}</Box>
-          </Paper>
-        </Grid>
-      </React.Fragment>
     );
   };
 
@@ -265,52 +231,72 @@ const UserList = (props) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={2}>
-                <Grid container spacing={1}>
-                  <Grid container item xs={12} spacing={3}>
-                    <FormRow
-                      stat1={{
-                        text: "Podíl na celkové částce",
-                        value: Math.round((kcTotal / sumKc) * 1000) / 10 + "%",
-                      }}
-                      stat2={{
-                        text: "Celkový počet aktivit",
-                        value: numactivities,
-                      }}
-                      stat3={{
-                        text: "Km na aktivitu",
-                        value:
-                          Math.round(
+                <TableContainer component={Paper}>
+                  <Table aria-label="stats details">
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="center">
+                          <Paper className={classes.kmPaper}>
+                            Podíl na celkové částce
+                          </Paper>
+                        </TableCell>
+                        <TableCell align="left">
+                          {Math.round((kcTotal / sumKc) * 1000) / 10 + "%"}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Paper className={classes.kmPaper}>
+                            Celkový počet aktivit
+                          </Paper>
+                        </TableCell>
+                        <TableCell align="left">{numactivities}</TableCell>
+                        <TableCell align="center">
+                          <Paper className={classes.kmPaper}>
+                            Km na aktivitu
+                          </Paper>
+                        </TableCell>
+                        <TableCell align="left">
+                          {Math.round(
                             (runKM + rideKM + swimKM + nskiKM) /
                               validactivities /
                               100
                           ) /
                             10 +
-                          " km",
-                      }}
-                    />
-                  </Grid>
-                  <Grid container item xs={12} spacing={3}>
-                    <FormRow
-                      stat1={{
-                        text: "Podíl započitatelných aktivit",
-                        value:
-                          Math.round((validactivities / numactivities) * 1000) /
+                            " km"}
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell align="center">
+                          <Paper className={classes.kmPaper}>
+                            Podíl započitatelných aktivit
+                          </Paper>
+                        </TableCell>
+                        <TableCell align="left">
+                          {Math.round(
+                            (validactivities / numactivities) * 1000
+                          ) /
                             10 +
-                          "%",
-                      }}
-                      stat2={{
-                        text: "Započitatelné aktivity",
-                        value: validactivities,
-                      }}
-                      stat3={{
-                        text: "Výdělek na aktivitu",
-                        value:
-                          Math.round((kcTotal / validactivities) * 10) / 10 +
-                          " Kč",
-                      }}
-                    />
-                  </Grid>
-                </Grid>
+                            "%"}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Paper className={classes.kmPaper}>
+                            Započitatelné aktivity
+                          </Paper>
+                        </TableCell>
+                        <TableCell align="left">{validactivities}</TableCell>
+                        <TableCell align="center">
+                          <Paper className={classes.kmPaper}>
+                            Výdělek na aktivitu
+                          </Paper>
+                        </TableCell>
+                        <TableCell align="left">
+                          {Math.round((kcTotal / validactivities) * 10) / 10 +
+                            " Kč"}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Box>
             </Collapse>
           </TableCell>

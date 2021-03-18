@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
   head: {
     backgroundColor: "#ebebeb",
   },
+  heading: {
+    padding: "20px",
+  },
 }));
 
 const Charity = () => {
@@ -128,7 +131,14 @@ const Charity = () => {
         2019
       </TabPanel>
       <TabPanel value={value} index={4}>
-        2018
+        <Box align="center">
+          <Paper elevation={3}>
+            <Typography variant="h5" className={classes.heading}>
+              1. ročník pro Šárku Musilovou
+            </Typography>
+            <img src="zpa_pomaha_2018.jpg" alt="Ročník 1" />
+          </Paper>
+        </Box>
       </TabPanel>
     </div>
   );

@@ -59,7 +59,7 @@ const About = () => {
       } catch (err) {}
     };
     fetchChanges();
-  }, []);
+  }, [sendRequest]);
 
   const columns = ["DATUM", "VERZE", "ZMĚNA", "POPIS"];
 

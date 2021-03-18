@@ -64,7 +64,7 @@ function App() {
       }
     };
     fetchStatus();
-  }, []);
+  }, [sendRequest]);
 
   // Update activity stats
   useEffect(() => {
@@ -74,7 +74,7 @@ function App() {
       } catch (err) {}
     };
     updateActivities();
-  }, []);
+  }, [sendRequest]);
 
   let routes;
 

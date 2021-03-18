@@ -32,7 +32,7 @@ const Activity = (props) => {
       } catch (err) {}
     };
     fetchActivities();
-  }, []);
+  }, [sendRequest, type]);
 
   return (
     <React.Fragment>
