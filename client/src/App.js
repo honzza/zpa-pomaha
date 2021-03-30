@@ -96,8 +96,11 @@ function App() {
         <Route key={5} exact path="/swim">
           <Activity type={"swim"} label={"PLAVÁNÍ"} user={loggedUser} />
         </Route>
-        <Route key={6} exact path="/charity" component={Charity} />
-        <Route key={7} exact path="/about" component={About} />
+        <Route key={6} exact path="/walk">
+          <Activity type={"walk"} label={"CHŮZE"} user={loggedUser} />
+        </Route>
+        <Route key={7} exact path="/charity" component={Charity} />
+        <Route key={8} exact path="/about" component={About} />
         <Redirect to="/dashboard" />
       </Switch>
     );

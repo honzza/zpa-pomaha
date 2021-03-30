@@ -1,6 +1,6 @@
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
-const activityTypes = ["ride", "run", "swim", "nski"];
+const activityTypes = ["ride", "run", "swim", "nski", "walk"];
 
 const getActivityByType = async (req, res, next) => {
   const activityParam = req.params.activityType;

@@ -10,6 +10,7 @@ const updateAthletes = async (req, res, next) => {
         u.activity.run.m = 0;
         u.activity.swim.m = 0;
         u.activity.nski.m = 0;
+        u.activity.walk.m = 0;
         u.validactivities = 0;
         u.numactivities = 0;
         await Activity.find({ athlete_id: u.uid }).exec(
@@ -31,6 +32,12 @@ const updateAthletes = async (req, res, next) => {
                 u.activity.nski.m += a.distance;
                 u.validactivities++;
               }
+              if (
+                (a.type === "Walk" || a.type === "Hike") &&
+                a.distance >= 5000
+              ) {
+                u.activity.walk.m += a.distance;
+              }
               u.numactivities++;
             });
             u.activity.ride.kc =
@@ -40,6 +47,7 @@ const updateAthletes = async (req, res, next) => {
               (u.activity.swim.m / 1000) * process.env.SWIM_KC;
             u.activity.nski.kc =
               (u.activity.nski.m / 1000) * process.env.NSKI_KC;
+            u.activity.walk.kc = 0;
             u.updatedAt = new Date();
 
             await u.save();

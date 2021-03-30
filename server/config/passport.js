@@ -33,6 +33,7 @@ module.exports = function (passport) {
             run: { m: 0, kc: 0 },
             swim: { m: 0, kc: 0 },
             nski: { m: 0, kc: 0 },
+            walk: { m: 0, kc: 0 },
           },
           active: true,
           numactivities: 0,

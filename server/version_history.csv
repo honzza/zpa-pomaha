@@ -1,4 +1,6 @@
 date;version;type;description
+;;plán;V úvodní tabulce badge u nejlepšího cyklisty, běžce, běžkaře a plavce
+30.03.2021;2.6.0;přidáno;NEJLEPŠÍ CHODCI! Sice se to nepočítá, ale své příznivce tato kategorie má
 18.03.2021;2.5.4;opraveno;Aktualizace komponent, drobné chyby, zobrazení detailní statistiky
 16.03.2021;2.5.3;opraveno;Doplněn text na stránku s popisem, drobná vylepšení
 11.03.2021;2.5.2;opraveno;Čištění kódu a opravy chyb, drobná vylepšení

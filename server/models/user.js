@@ -28,6 +28,10 @@ const userSchema = new Schema({
       m: { type: Number, required: false },
       kc: { type: Number, required: false },
     },
+    walk: {
+      m: { type: Number, required: false },
+      kc: { type: Number, required: false },
+    },
   },
   numactivities: { type: Number, required: false },
   validactivities: { type: Number, required: false },

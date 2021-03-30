@@ -53,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
   nohighlight: {
     background: "inherit",
   },
+  title: {
+    padding: "15px",
+  },
 }));
 
 const ActivityList = (props) => {
@@ -60,9 +63,12 @@ const ActivityList = (props) => {
   const { items, type, label, uidLogged } = props;
 
   //Sort by sum of Kc
-  const resultsSorted = items.activity.sort((a, b) => b[type].kc - a[type].kc);
+  const resultsSorted = items.activity.sort((a, b) => b[type].m - a[type].m);
 
-  const columns = ["#", ":)", "SPORTOVEC", label, "KČ"];
+  let columns;
+  type === "walk"
+    ? (columns = ["#", ":)", "SPORTOVEC", label])
+    : (columns = ["#", ":)", "SPORTOVEC", label, "KČ"]);
 
   const Row = (props) => {
     const {
@@ -102,11 +108,13 @@ const ActivityList = (props) => {
             <Typography>{formatterKM.format(m / 1000)}</Typography>
           </Paper>
         </TableCell>
-        <TableCell>
-          <Typography variant="h5" align="center">
-            {formatterCU.format(kc)}
-          </Typography>
-        </TableCell>
+        {type !== "walk" && (
+          <TableCell>
+            <Typography variant="h5" align="center">
+              {formatterCU.format(kc)}
+            </Typography>
+          </TableCell>
+        )}
       </TableRow>
     );
   };
@@ -123,6 +131,16 @@ const ActivityList = (props) => {
 
   return (
     <TableContainer component={Paper} className={classes.container}>
+      {type === "walk" && (
+        <Typography variant="h5" align="center" className={classes.title}>
+          Nejlepší chodci
+        </Typography>
+      )}
+      {type === "walk" && (
+        <Typography align="center">
+          (mimo soutěž, pouze chůze delší 5km)
+        </Typography>
+      )}
       <Table stickyHeader aria-label="table">
         <TableHead>
           <TableRow>
