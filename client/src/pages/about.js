@@ -42,12 +42,19 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100px",
     padding: "20px",
   },
+  p: {
+    marginBottom: "20px",
+  },
+  paper: {
+    overflow: "auto",
+  },
 }));
 
 const About = () => {
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedChanges, setLoadedChanges] = useState();
+  const [lOc, setLoC] = useState();
 
   useEffect(() => {
     const fetchChanges = async () => {
@@ -60,6 +67,27 @@ const About = () => {
     };
     fetchChanges();
   }, [sendRequest]);
+
+  useEffect(() => {
+    const linesOfCode = async () => {
+      try {
+        const response = await fetch(
+          "https://api.codetabs.com/v1/loc?github=honzza/zpa-pomaha"
+        );
+        const responseData = await response.json();
+        const total = responseData.find((obj) => {
+          return obj.language === "Total";
+        }).linesOfCode;
+        const json = responseData.find((obj) => {
+          return obj.language === "JSON";
+        }).linesOfCode;
+        setLoC(total - json);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    linesOfCode();
+  }, [setLoC]);
 
   const columns = ["DATUM", "VERZE", "ZMĚNA", "POPIS"];
 
@@ -118,7 +146,7 @@ const About = () => {
         </Table>
       </TableContainer>
       <Box my={"10px"} align="center">
-        <Paper>
+        <Paper className={classes.paper}>
           <img src="mern.png" alt="MERN" className={classes.img} />
           <img
             src="api_logo_pwrdBy_strava_stack_gray.svg"
@@ -130,6 +158,9 @@ const About = () => {
             alt="Material UI"
             className={classes.img2}
           />
+          <Typography className={classes.p}>
+            Aplikace obsahuje celkem {lOc} řádků kódu
+          </Typography>
         </Paper>
       </Box>
     </React.Fragment>

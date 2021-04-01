@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     backgroundColor: theme.palette.background.paper,
   },
-  text: {
+  mb: {
     marginBottom: "20px",
   },
   head: {
@@ -94,13 +94,13 @@ const Charity = () => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Typography className={classes.text}>
+        <Typography className={classes.mb}>
           Sportujeme a naše nasportované kilometry ZPA převádí na peníze. Tyto
           peníze pak věnujeme někomu, kdo je potřebuje nebo na projekt, kde
           pomohou změnit věci k lepšímu. Následující tabulka uvádí poměry
           kilometrů na koruny pro jednotlivé aktivity.
         </Typography>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.mb}>
           <Table aria-label="km to kc table">
             <TableHead>
               <TableRow className={classes.head}>
@@ -120,15 +120,33 @@ const Charity = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <Typography>
+          Nový ročník ZPA pomáhá sportem startuje pravidelně každý rok od 15.
+          prosince.
+        </Typography>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        2021
+        Pro koho sportujeme letos se brzy dozvíte
       </TabPanel>
       <TabPanel value={value} index={2}>
-        2020
+        <Box align="center">
+          <Paper elevation={3}>
+            <Typography variant="h5" className={classes.heading}>
+              3. ročník
+            </Typography>
+            <img src="zpa_pomaha_2020.jpg" alt="Ročník 3" />
+          </Paper>
+        </Box>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        2019
+        <Box align="center">
+          <Paper elevation={3}>
+            <Typography variant="h5" className={classes.heading}>
+              2. ročník
+            </Typography>
+            <img src="zpa_pomaha_2019.jpg" alt="Ročník 2" />
+          </Paper>
+        </Box>
       </TabPanel>
       <TabPanel value={value} index={4}>
         <Box align="center">
