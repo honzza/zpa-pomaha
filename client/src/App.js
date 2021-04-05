@@ -1,4 +1,5 @@
 import MiniDrawer from "./components/MiniDrawer";
+import Splash from "./components/Splash";
 import AuthContext from "./context/auth-context";
 import React, { useState, useCallback, useEffect, Suspense } from "react";
 import {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const { isLoading, error, sendRequest } = useHttpClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedUser, setLoggedUser] = useState({
@@ -57,9 +59,11 @@ function App() {
             avatar: responseData.user.avatar,
             uid: responseData.user.uid,
           });
+          setIsCheckingAuth(false);
           return <Redirect to="/dashboard" />;
         }
       } catch (err) {
+        setIsCheckingAuth(false);
         return setIsLoggedIn(false);
       }
     };
@@ -117,41 +121,44 @@ function App() {
     <AuthContext.Provider
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
     >
-      <Router>
-        {loggedUser && (
-          <MiniDrawer user={loggedUser}>
-            <main>
-              {error && (
-                <SnackMsg text={error} severity={"warning"} history={true} />
-              )}
-              {isLoggedIn && (
-                <SnackMsg
-                  text={
-                    "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA pomáhá sportem!"
-                  }
-                  severity={"success"}
-                />
-              )}
-              {isLoading && (
-                <Backdrop className={classes.backdrop} open={isLoading}>
-                  <CircularProgress color="inherit" />
-                </Backdrop>
-              )}
-              {!isLoading && (
-                <Suspense
-                  fallback={
-                    <Backdrop className={classes.backdrop} open={isLoading}>
-                      <CircularProgress color="inherit" />
-                    </Backdrop>
-                  }
-                >
-                  {routes}
-                </Suspense>
-              )}
-            </main>
-          </MiniDrawer>
-        )}
-      </Router>
+      {isCheckingAuth && <Splash />}
+      {!isCheckingAuth && (
+        <Router>
+          {loggedUser && (
+            <MiniDrawer user={loggedUser}>
+              <main>
+                {error && (
+                  <SnackMsg text={error} severity={"warning"} history={true} />
+                )}
+                {isLoggedIn && (
+                  <SnackMsg
+                    text={
+                      "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA pomáhá sportem!"
+                    }
+                    severity={"success"}
+                  />
+                )}
+                {isLoading && (
+                  <Backdrop className={classes.backdrop} open={isLoading}>
+                    <CircularProgress color="inherit" />
+                  </Backdrop>
+                )}
+                {!isLoading && (
+                  <Suspense
+                    fallback={
+                      <Backdrop className={classes.backdrop} open={isLoading}>
+                        <CircularProgress color="inherit" />
+                      </Backdrop>
+                    }
+                  >
+                    {routes}
+                  </Suspense>
+                )}
+              </main>
+            </MiniDrawer>
+          )}
+        </Router>
+      )}
     </AuthContext.Provider>
   );
 }
