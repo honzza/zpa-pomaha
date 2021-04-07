@@ -52,7 +52,12 @@ module.exports = function (passport) {
           if (!clubMember.data.find((v) => v.id == process.env.CLUB_ID)) {
             try {
               let user = await User.findOne({ uid: profile.id });
-              if (user) await user.remove();
+              if (user) {
+                await axios.post(
+                  `https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`
+                );
+                await user.remove();
+              }
             } catch (err) {
               console.error(err);
             }
