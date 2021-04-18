@@ -240,6 +240,18 @@ const UserList = (props) => {
       } catch (err) {}
     };
 
+    let totalSumRatio = Math.round((kcTotal / sumKc) * 1000) / 10;
+    Number.isNaN(totalSumRatio) && (totalSumRatio = 0);
+    let kmPerActivity =
+      Math.round((runKM + rideKM + swimKM + nskiKM) / validactivities / 100) /
+      10;
+    Number.isNaN(kmPerActivity) && (kmPerActivity = 0);
+    let validActivitiesRatio =
+      Math.round((validactivities / numactivities) * 1000) / 10;
+    Number.isNaN(validActivitiesRatio) && (validActivitiesRatio = 0);
+    let kcTotalPerActivity = Math.round((kcTotal / validactivities) * 10) / 10;
+    Number.isNaN(kcTotalPerActivity) && (kcTotalPerActivity = 0);
+
     return (
       <React.Fragment>
         <TableRow
@@ -300,8 +312,7 @@ const UserList = (props) => {
                           </Paper>
                         </TableCell>
                         <TableCell align="left">
-                          {Math.round((kcTotal / sumKc) * 1000) / 10 + "%" &&
-                            "0%"}
+                          {totalSumRatio + "%"}
                         </TableCell>
                         <TableCell align="center">
                           <Paper className={classes.kmPaper}>
@@ -315,13 +326,7 @@ const UserList = (props) => {
                           </Paper>
                         </TableCell>
                         <TableCell align="left">
-                          {Math.round(
-                            (runKM + rideKM + swimKM + nskiKM) /
-                              validactivities /
-                              100
-                          ) /
-                            10 +
-                            " km" && "0 km"}
+                          {kmPerActivity + " km"}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -331,11 +336,7 @@ const UserList = (props) => {
                           </Paper>
                         </TableCell>
                         <TableCell align="left">
-                          {Math.round(
-                            (validactivities / numactivities) * 1000
-                          ) /
-                            10 +
-                            "%" && "0%"}
+                          {validActivitiesRatio + "%"}
                         </TableCell>
                         <TableCell align="center">
                           <Paper className={classes.kmPaper}>
@@ -349,8 +350,7 @@ const UserList = (props) => {
                           </Paper>
                         </TableCell>
                         <TableCell align="left">
-                          {Math.round((kcTotal / validactivities) * 10) / 10 +
-                            " Kč" && "0 Kč"}
+                          {kcTotalPerActivity + " Kč"}
                         </TableCell>
                       </TableRow>
                     </TableBody>
