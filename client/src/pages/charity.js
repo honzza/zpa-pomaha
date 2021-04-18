@@ -126,13 +126,13 @@ const Charity = () => {
         </Typography>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Pro koho sportujeme letos se brzy dozvíte
+        4. ročník pro Janu Lannen
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Box align="center">
           <Paper elevation={3}>
             <Typography variant="h5" className={classes.heading}>
-              3. ročník
+              3. ročník pro slečnu Lucii Nehybovou
             </Typography>
             <img src="zpa_pomaha_2020.jpg" alt="Ročník 3" />
           </Paper>

@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const { isLoading, error, sendRequest } = useHttpClient();
+  const { isLoading, message, error, sendRequest } = useHttpClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedUser, setLoggedUser] = useState({
     name: "",
@@ -70,16 +70,6 @@ function App() {
     fetchStatus();
   }, [sendRequest]);
 
-  // Update activity stats
-  useEffect(() => {
-    const updateActivities = async () => {
-      try {
-        await sendRequest(`${process.env.REACT_APP_BACKEND_PATH}/api/update`);
-      } catch (err) {}
-    };
-    updateActivities();
-  }, [sendRequest]);
-
   let routes;
 
   if (isLoggedIn) {
@@ -111,7 +101,7 @@ function App() {
   } else {
     routes = (
       <Switch>
-        <Route exact path="/login" component={Login} />
+        <Route key={1} exact path="/login" component={Login} />
         <Redirect to="/login" />
       </Switch>
     );
@@ -128,15 +118,10 @@ function App() {
             <MiniDrawer user={loggedUser}>
               <main>
                 {error && (
-                  <SnackMsg text={error} severity={"warning"} history={true} />
+                  <SnackMsg text={error} severity={"info"} history={true} />
                 )}
-                {isLoggedIn && (
-                  <SnackMsg
-                    text={
-                      "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA pomáhá sportem!"
-                    }
-                    severity={"success"}
-                  />
+                {isLoggedIn && message && (
+                  <SnackMsg text={message} severity={"success"} />
                 )}
                 {isLoading && (
                   <Backdrop className={classes.backdrop} open={isLoading}>

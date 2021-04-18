@@ -13,6 +13,7 @@ import {
   Typography,
   Paper,
   Avatar,
+  Button,
 } from "@material-ui/core";
 
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -77,11 +78,29 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: "unset",
     },
   },
+  buttonbox: {
+    display: "flex",
+    justifyContent: "flex-end",
+    margin: "15px 0",
+  },
+  button: {
+    backgroundColor: "#f699cd",
+    margin: "0 0 0 10px",
+    color: "#ffffff",
+  },
+  status: {
+    padding: "0 10px",
+    minWidth: "269px",
+    backgroundColor: "#ebebeb",
+    textAlign: "right",
+  },
 }));
 
 const UserList = (props) => {
   const classes = useStyles();
   const { items, uidLogged } = props;
+
+  let disabledButton;
 
   //Prepare data, sort by sum of Kc
   const results = items.users.map((user) => {
@@ -181,6 +200,46 @@ const UserList = (props) => {
       validactivities,
     } = props.row;
 
+    const [status, setStatus] = useState("Zatím se nic nestalo");
+
+    const deleteActivities = async (uid) => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_PATH}/api/user/activities/delete/${uid}`,
+          {
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Credentials": true,
+            },
+          }
+        );
+        const responseData = await response.json();
+        return setStatus(
+          `Smazáno ${responseData.deletedCount} aktivit, je nutné načíst stránku znovu`
+        );
+      } catch (err) {}
+    };
+
+    const uploadActivities = async (uid) => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_PATH}/api/user/activities/upload/${uid}`,
+          {
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Credentials": true,
+            },
+          }
+        );
+        const responseData = await response.json();
+        return setStatus(responseData);
+      } catch (err) {}
+    };
+
     return (
       <React.Fragment>
         <TableRow
@@ -241,7 +300,8 @@ const UserList = (props) => {
                           </Paper>
                         </TableCell>
                         <TableCell align="left">
-                          {Math.round((kcTotal / sumKc) * 1000) / 10 + "%"}
+                          {Math.round((kcTotal / sumKc) * 1000) / 10 + "%" &&
+                            "0%"}
                         </TableCell>
                         <TableCell align="center">
                           <Paper className={classes.kmPaper}>
@@ -261,10 +321,9 @@ const UserList = (props) => {
                               100
                           ) /
                             10 +
-                            " km"}
+                            " km" && "0 km"}
                         </TableCell>
                       </TableRow>
-
                       <TableRow>
                         <TableCell align="center">
                           <Paper className={classes.kmPaper}>
@@ -276,7 +335,7 @@ const UserList = (props) => {
                             (validactivities / numactivities) * 1000
                           ) /
                             10 +
-                            "%"}
+                            "%" && "0%"}
                         </TableCell>
                         <TableCell align="center">
                           <Paper className={classes.kmPaper}>
@@ -291,12 +350,42 @@ const UserList = (props) => {
                         </TableCell>
                         <TableCell align="left">
                           {Math.round((kcTotal / validactivities) * 10) / 10 +
-                            " Kč"}
+                            " Kč" && "0 Kč"}
                         </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {uidLogged === 20023846 && (
+                  <div>
+                    <Box className={classes.buttonbox}>
+                      {numactivities === 0
+                        ? (disabledButton = true)
+                        : (disabledButton = false)}
+                      <Button
+                        disabled={disabledButton}
+                        variant="contained"
+                        size="small"
+                        className={classes.button}
+                        onClick={() => deleteActivities(uid)}
+                      >
+                        Smaž aktivity
+                      </Button>
+                      <Button
+                        disabled={!disabledButton}
+                        variant="contained"
+                        size="small"
+                        className={classes.button}
+                        onClick={() => uploadActivities(uid)}
+                      >
+                        Nahraj aktivity
+                      </Button>
+                    </Box>
+                    <Box className={classes.buttonbox}>
+                      <Paper className={classes.status}>{status}</Paper>
+                    </Box>
+                  </div>
+                )}
               </Box>
             </Collapse>
           </TableCell>

@@ -3,29 +3,24 @@ const passport = require("passport");
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
 const { userLogger } = require("../config/winston");
 
-// when login is successful, retrieve user info
 router.get("/login/success", (req, res) => {
   if (req.user) {
     userLogger.info("login", { user: req.user.displayname });
     res.json({
       success: true,
-      message: "User has successfully authenticated",
+      message:
+        "Přihlášení proběhlo úspěšně, vítejte v aplikaci ZPA pomáhá sportem!",
       user: req.user,
     });
   } else {
+    let msg = JSON.stringify(req.flash());
+    msg = JSON.parse(msg);
+    Object.keys(msg).length > 0 ? (msg = msg.error[0]) : (msg = undefined);
     res.status(401).json({
       success: false,
-      //   message: "User not authenticated",
+      message: msg,
     });
   }
-});
-
-// when login failed, send failed msg
-router.get("/login/failed", ensureGuest, (req, res) => {
-  res.status(401).json({
-    success: false,
-    message: "User failed to authenticate",
-  });
 });
 
 router.get(
@@ -39,14 +34,14 @@ router.get(
   ensureGuest,
   passport.authenticate("strava", {
     successRedirect: `${process.env.CLIENT_PATH}`,
-    failureRedirect: "/auth/login/failed",
+    failureRedirect: `${process.env.CLIENT_PATH}/login`,
     failureFlash: true,
   })
 );
 
 router.get("/logout", ensureAuth, (req, res) => {
   req.logout();
-  req.flash("message", "You have successfully logged out");
+  req.flash("error", "Došlo k odhlášení z aplikace");
   res.redirect(`${process.env.CLIENT_PATH}/login`);
 });
 

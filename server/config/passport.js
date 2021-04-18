@@ -2,6 +2,7 @@ const StravaStrategy = require("passport-strava").Strategy;
 const User = require("../models/user");
 const Activity = require("../models/activity");
 const axios = require("axios");
+const utils = require("../utils/utils");
 
 module.exports = function (passport) {
   passport.serializeUser((user, done) => done(null, user.id));
@@ -50,20 +51,14 @@ module.exports = function (passport) {
             }
           );
           if (!clubMember.data.find((v) => v.id == process.env.CLUB_ID)) {
-            try {
-              let user = await User.findOne({ uid: profile.id });
-              if (user) {
-                await axios.post(
-                  `https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`
-                );
-                await user.remove();
-              }
-            } catch (err) {
-              console.error(err);
-            }
+            await User.findOneAndDelete({ uid: profile.id });
+            await Activity.deleteMany({ athlete_id: profile.id });
+            await axios.post(
+              `https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`
+            );
             return done(null, false, {
               message:
-                "Sorry, this application is only for the members of the ZPA club",
+                "Je nám líto, ale tato aplikace je pouze pro členy sportovního klubu ZPA",
             });
           }
         } catch (err) {
@@ -77,54 +72,9 @@ module.exports = function (passport) {
             done(null, user);
           } else {
             user = await User.create(newUser);
-
             // Get athlete activity history
-            let page = 1;
-            let activityHistory;
-            // Set epoch (JS months start from 0)
-            const yearStart = new Date().getFullYear() - 1;
-            const epoch =
-              new Date(
-                yearStart,
-                process.env.MONTH_START,
-                process.env.DAY_START
-              ).valueOf() / 1000;
-            do {
-              try {
-                activityHistory = await axios.get(
-                  `https://www.strava.com/api/v3/athlete/activities?after=${epoch}&page=${page}`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${accessToken}`,
-                    },
-                  }
-                );
-                activityHistory.data.forEach(async (ah) => {
-                  const newActivity = {
-                    athlete_id: ah.athlete.id,
-                    name: ah.name,
-                    distance: ah.distance,
-                    moving_time: ah.moving_time,
-                    elapsed_time: ah.elapsed_time,
-                    total_elevation_gain: ah.total_elevation_gain,
-                    type: ah.type,
-                    id: ah.id,
-                    start_date_local: ah.start_date_local,
-                    start_latlng: ah.start_latlng,
-                    average_speed: ah.average_speed,
-                    max_speed: ah.max_speed,
-                    average_heartrate: ah.average_heartrate,
-                    max_heartrate: ah.max_heartrate,
-                    elev_high: ah.elev_high,
-                    elev_low: ah.elev_low,
-                  };
-                  await Activity.create(newActivity);
-                });
-              } catch (err) {
-                console.error(err);
-              }
-              page++;
-            } while (activityHistory.data.length);
+            await utils.getActivities(accessToken);
+            await utils.updateAthlete(user.uid);
             done(null, user);
           }
         } catch (err) {
