@@ -1,5 +1,6 @@
 date;version;type;description
 ;;plán;V úvodní tabulce badge u nejlepšího cyklisty, běžce, běžkaře a plavce
+26.04.2021;3.0.2;přidáno;Doplněn text v sekci Pomáháme, stěhování serveru z Heroku na GAE
 18.04.2021;3.0.1;opraveno;Drobná chybka v počítání statistik, kterou se mi podařilo vytvořit, build #100! :)
 18.04.2021;3.0.0;přidáno;Zásadní zásah do jádra aplikace, optimalizace, ošetření chybějících stavů
 07.04.2021;2.7.1;opraveno;Opravena aktualizace dat, kterou se mi podařilo rozbít předchozí úpravou

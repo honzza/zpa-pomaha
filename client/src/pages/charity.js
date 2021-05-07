@@ -135,6 +135,12 @@ const Charity = () => {
               3. ročník pro slečnu Lucii Nehybovou
             </Typography>
             <img src="zpa_pomaha_2020.jpg" alt="Ročník 3" />
+            <Typography className={classes.heading}>
+              Dobrý den všem sportovcům, touto cestou bych vám všem chtěla za
+              svou dceru Lucku Nehybovou na kterou se sportovalo minulý rok
+              poděkovat. Za finanční nasportovanou částku pořídíme diabetické
+              pomůcky k usnadnění, hlídání a sledování hodnoty cukru. Nehybovi
+            </Typography>
           </Paper>
         </Box>
       </TabPanel>
@@ -142,7 +148,7 @@ const Charity = () => {
         <Box align="center">
           <Paper elevation={3}>
             <Typography variant="h5" className={classes.heading}>
-              2. ročník
+              2. ročník pro slečnu Vendulku Fenikovou
             </Typography>
             <img src="zpa_pomaha_2019.jpg" alt="Ročník 2" />
           </Paper>
