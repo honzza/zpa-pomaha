@@ -165,7 +165,7 @@ const processWebhooks = async (req, res, next) => {
                     );
                   }
                 } else {
-                  webhookLogger.warn("Nothing to update", {
+                  webhookLogger.info("Nothing to update", {
                     type: "update",
                     status: 304,
                     webhook: w.toObject({ versionKey: false }),
@@ -186,9 +186,8 @@ const processWebhooks = async (req, res, next) => {
                 await w.remove();
                 break;
             }
+            await utils.updateAthlete(w.owner_id);
           }
-
-          await utils.updateAthlete(w.owner_id);
 
           // Process webhook athlete event
           if (w.object_type === "athlete") {
@@ -199,8 +198,8 @@ const processWebhooks = async (req, res, next) => {
                 });
                 let user = await User.findOneAndDelete({ uid: w.owner_id });
                 await w.remove();
-                user ? (user = true) : (user = false);
-                webhookLogger.info(
+                user ? (user = user.displayname) : (user = false);
+                webhookLogger.warn(
                   `user removed: ${user}, activities removed: ${activity.deletedCount}`,
                   {
                     type: "athlete update",

@@ -1,6 +1,5 @@
 const StravaStrategy = require("passport-strava").Strategy;
 const User = require("../models/user");
-const Activity = require("../models/activity");
 const axios = require("axios");
 const utils = require("../utils/utils");
 
@@ -51,8 +50,6 @@ module.exports = function (passport) {
             }
           );
           if (!clubMember.data.find((v) => v.id == process.env.CLUB_ID)) {
-            await User.findOneAndDelete({ uid: profile.id });
-            await Activity.deleteMany({ athlete_id: profile.id });
             await axios.post(
               `https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`
             );

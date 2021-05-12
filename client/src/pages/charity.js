@@ -15,6 +15,7 @@ import {
   TableHead,
   Paper,
 } from "@material-ui/core";
+import SimpleCard from "../components/UIElements/SimpleCard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -126,7 +127,28 @@ const Charity = () => {
         </Typography>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        4. ročník pro Janu Lannen
+        <Box align="center">
+          <Paper elevation={3}>
+            <Typography variant="h5" className={classes.heading}>
+              4. ročník pro Janu Lannen
+            </Typography>
+            <Box align="left" padding="20px">
+              <SimpleCard
+                title="Milníky 10.5.2021"
+                text={
+                  <ul>
+                    <li>Jindra Král překročil částku 2 000 Kč</li>
+                    <li>Celkově jsme se dostali na 16 000 km a 10 000 Kč</li>
+                    <li>
+                      V klubu tisícovkářů jsou zatím dva účastníci - Jindra Král
+                      a Sáďa
+                    </li>
+                  </ul>
+                }
+              />
+            </Box>
+          </Paper>
+        </Box>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Box align="center">
@@ -135,12 +157,15 @@ const Charity = () => {
               3. ročník pro slečnu Lucii Nehybovou
             </Typography>
             <img src="zpa_pomaha_2020.jpg" alt="Ročník 3" />
-            <Typography className={classes.heading}>
-              Dobrý den všem sportovcům, touto cestou bych vám všem chtěla za
-              svou dceru Lucku Nehybovou na kterou se sportovalo minulý rok
+            <Box align="left" padding="20px">
+              <SimpleCard
+                title="Poděkování od Nehybových"
+                text="Dobrý den všem sportovcům, touto cestou bych vám všem chtěla za
+              svou dceru Lucku Nehybovou, na kterou se sportovalo minulý rok,
               poděkovat. Za finanční nasportovanou částku pořídíme diabetické
-              pomůcky k usnadnění, hlídání a sledování hodnoty cukru. Nehybovi
-            </Typography>
+              pomůcky k usnadnění, hlídání a sledování hodnoty cukru. Nehybovi"
+              />
+            </Box>
           </Paper>
         </Box>
       </TabPanel>
