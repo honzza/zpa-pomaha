@@ -50,8 +50,9 @@ app.use(passport.session());
 app.use(
   cors({
     origin: process.env.CLIENT_PATH,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    methods: "GET,POST",
     credentials: true,
+    maxAge: 86400, // Use cache to minimize OPTIONS requests
   })
 );
 

@@ -1,5 +1,8 @@
 date;version;type;description
+;;plán;Cíl pro 2021 - 60.000 km - zobrazit a kolik chybí do cíle
+;;plán;Každý uživatel si může stanovit vlastní cíl aktivity a vidí zbývající km nebo Kč
 ;;plán;V úvodní tabulce badge u nejlepšího cyklisty, běžce, běžkaře a plavce
+13.06.2021;3.2.0;přidáno;Upgrade knihoven, optimalizace dotazů na API
 12.05.2021;3.1.0;přidáno;Upgrade knihoven, doplněn text a grafika v sekci Pomáháme, opravy chyb a drobná vylepšení
 07.05.2021;3.0.2;přidáno;Doplněn text v sekci Pomáháme, stěhování serveru z Heroku na GAE
 18.04.2021;3.0.1;opraveno;Drobná chybka v počítání statistik, kterou se mi podařilo vytvořit, build #100! :)
