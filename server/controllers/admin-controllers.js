@@ -14,7 +14,7 @@ const getVersionHistory = async (req, res, next) => {
 };
 
 const getConfig = async (req, res, next) => {
-  let config = await Config.find();
+  let config = await Config.find({ club_id: { $in: req.user.clubs } });
   res.json(config);
 };
 

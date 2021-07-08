@@ -54,6 +54,11 @@ function App() {
           `${process.env.REACT_APP_BACKEND_PATH}/auth/login/success`
         );
         if (responseData.success === true) {
+          // Load app configuration
+          const configData = await sendRequest(
+            `${process.env.REACT_APP_BACKEND_PATH}/api/admin/config`
+          );
+          setAppConfig(configData);
           setIsLoggedIn(true);
           setLoggedUser({
             name: responseData.user.firstname,
@@ -70,19 +75,6 @@ function App() {
     };
     fetchStatus();
   }, [sendRequest]);
-
-  // Load app configuration
-  // useEffect(() => {
-  //   const fetchConfig = async () => {
-  //     try {
-  //       const responseData = await sendRequest(
-  //         `${process.env.REACT_APP_BACKEND_PATH}/api/admin/config`
-  //       );
-  //       setAppConfig(responseData);
-  //     } catch (err) {}
-  //   };
-  //   fetchConfig();
-  // }, [sendRequest]);
 
   let routes;
 
@@ -125,13 +117,14 @@ function App() {
     <AuthContext.Provider
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
     >
-      {appConfig && console.log(appConfig[0].app_title)}
       {isCheckingAuth && <Splash />}
       {!isCheckingAuth && (
         <Router>
           {loggedUser && (
             <MiniDrawer user={loggedUser}>
               <main>
+                {appConfig &&
+                  console.log("počet klubů " + appConfig.length, appConfig)}
                 {error && (
                   <SnackMsg text={error} severity={"info"} history={true} />
                 )}
