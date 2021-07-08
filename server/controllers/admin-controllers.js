@@ -1,5 +1,6 @@
 const csv = require("csv-parser");
 const fs = require("fs");
+const Config = require("../models/app-config");
 
 const getVersionHistory = async (req, res, next) => {
   const results = [];
@@ -12,4 +13,10 @@ const getVersionHistory = async (req, res, next) => {
     });
 };
 
+const getConfig = async (req, res, next) => {
+  let config = await Config.find();
+  res.json(config);
+};
+
 exports.getVersionHistory = getVersionHistory;
+exports.getConfig = getConfig;

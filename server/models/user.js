@@ -35,6 +35,7 @@ const userSchema = new Schema({
   },
   numactivities: { type: Number, required: false },
   validactivities: { type: Number, required: false },
+  clubs: { type: Array, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   active: { type: Boolean, required: true },

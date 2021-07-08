@@ -2,6 +2,7 @@ const StravaStrategy = require("passport-strava").Strategy;
 const User = require("../models/user");
 const axios = require("axios");
 const utils = require("../utils/utils");
+const Config = require("../models/app-config");
 
 module.exports = function (passport) {
   passport.serializeUser((user, done) => done(null, user.id));
@@ -39,7 +40,8 @@ module.exports = function (passport) {
           numactivities: 0,
           validactivities: 0,
         };
-        // Check if logging athlete is member of selected club
+        // Check if logging athlete is member of a club of any application in DB
+        let userClubsArray;
         try {
           let clubMember = await axios.get(
             "https://www.strava.com/api/v3/athlete/clubs",
@@ -49,13 +51,20 @@ module.exports = function (passport) {
               },
             }
           );
-          if (!clubMember.data.find((v) => v.id == process.env.CLUB_ID)) {
+          let config = await Config.find();
+
+          userClubsArray = clubMember.data.map((x) => x.id);
+          let appClubsArray = config.map((x) => x.club_id);
+          let intersection = userClubsArray.filter((x) =>
+            appClubsArray.includes(x)
+          );
+          if (!intersection.length) {
             await axios.post(
               `https://www.strava.com/oauth/deauthorize?access_token=${accessToken}`
             );
             return done(null, false, {
               message:
-                "Je nám líto, ale tato aplikace je pouze pro členy sportovního klubu ZPA",
+                "Je nám líto, ale tato aplikace je pouze pro členy vybraných sportovních klubů Strava",
             });
           }
         } catch (err) {
@@ -66,12 +75,15 @@ module.exports = function (passport) {
         try {
           let user = await User.findOne({ uid: profile.id });
           if (user) {
+            // Update user's clubs
+            user.clubs = userClubsArray;
+            await user.save();
             done(null, user);
           } else {
             user = await User.create(newUser);
             // Get athlete activity history
             await utils.getActivities(accessToken);
-            await utils.updateAthlete(user.uid);
+            await utils.updateAthlete(user.uid, userClubsArray);
             done(null, user);
           }
         } catch (err) {

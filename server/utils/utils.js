@@ -51,7 +51,7 @@ const getActivities = async (accessToken) => {
   }
 };
 
-const updateAthlete = async (userUid) => {
+const updateAthlete = async (userUid, userClubs) => {
   try {
     let u = await User.findOne({ uid: userUid });
     u.activity.ride.m = 0;
@@ -90,6 +90,7 @@ const updateAthlete = async (userUid) => {
         u.activity.swim.kc = (u.activity.swim.m / 1000) * process.env.SWIM_KC;
         u.activity.nski.kc = (u.activity.nski.m / 1000) * process.env.NSKI_KC;
         u.activity.walk.kc = 0;
+        u.clubs = userClubs;
         u.updatedAt = new Date();
         await u.save();
       }
