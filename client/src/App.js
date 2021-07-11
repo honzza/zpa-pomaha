@@ -11,6 +11,7 @@ import {
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SnackMsg from "./components/UIElements/SnackMsg";
+import SimpleDialog from "./components/UIElements/SimpleDialog";
 import { useHttpClient } from "./hooks/http-hook";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -29,7 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [appConfig, setAppConfig] = useState();
+  const [appConfig, setAppConfig] = useState({
+    app_title: "Pohyb pomáhá",
+  });
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const { isLoading, message, error, sendRequest } = useHttpClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,6 +40,12 @@ function App() {
     name: "",
     avatar: "",
   });
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (configItem) => {
+    setOpen(false);
+    setAppConfig(configItem);
+  };
 
   const login = useCallback(() => {
     setIsLoggedIn(true);
@@ -55,9 +64,10 @@ function App() {
         );
         if (responseData.success === true) {
           // Load app configuration
-          const configData = await sendRequest(
+          let configData = await sendRequest(
             `${process.env.REACT_APP_BACKEND_PATH}/api/admin/config`
           );
+          configData.length > 1 ? setOpen(true) : (configData = configData[0]);
           setAppConfig(configData);
           setIsLoggedIn(true);
           setLoggedUser({
@@ -118,13 +128,14 @@ function App() {
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
     >
       {isCheckingAuth && <Splash />}
-      {!isCheckingAuth && (
+      {appConfig && appConfig.length > 1 && (
+        <SimpleDialog open={open} onClose={handleClose} clubList={appConfig} />
+      )}
+      {!isCheckingAuth && !open && (
         <Router>
           {loggedUser && (
-            <MiniDrawer user={loggedUser}>
+            <MiniDrawer user={loggedUser} config={appConfig}>
               <main>
-                {appConfig &&
-                  console.log("počet klubů " + appConfig.length, appConfig)}
                 {error && (
                   <SnackMsg text={error} severity={"info"} history={true} />
                 )}

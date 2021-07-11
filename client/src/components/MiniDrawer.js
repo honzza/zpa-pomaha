@@ -141,6 +141,7 @@ export default function MiniDrawer(props) {
   ];
 
   const { name, avatar, uid } = props.user;
+  const { app_title } = props.config;
 
   return (
     <div className={classes.root}>
@@ -166,7 +167,9 @@ export default function MiniDrawer(props) {
             </IconButton>
           )}
           <Typography variant="h6" noWrap className={classes.root}>
-            ZPA pomáhá sportem - {new Date().getFullYear() - 2018 + 1}. ročník
+            {app_title === "Pohyb pomáhá"
+              ? app_title
+              : "Pohyb pomáhá - " + app_title}
           </Typography>
           {avatar && (
             <Avatar
