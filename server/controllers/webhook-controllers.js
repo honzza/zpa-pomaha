@@ -1,10 +1,9 @@
 const axios = require("axios");
-const HttpError = require("../models/http-error");
 const WebHook = require("../models/web-hook");
 const Activity = require("../models/activity");
 const User = require("../models/user");
-const utils = require("../utils/utils");
 const { webhookLogger } = require("../config/winston");
+const util = require("../utils/update-athlete");
 
 const createSubscription = async (req, res, next) => {
   // Your verify token. Should be a random string.
@@ -186,7 +185,7 @@ const processWebhooks = async (req, res, next) => {
                 await w.remove();
                 break;
             }
-            await utils.updateAthlete(w.owner_id);
+            await util.updateAthlete(w.owner_id);
           }
 
           // Process webhook athlete event

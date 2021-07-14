@@ -1,8 +1,9 @@
 const StravaStrategy = require("passport-strava").Strategy;
 const User = require("../models/user");
 const axios = require("axios");
-const utils = require("../utils/utils");
 const Config = require("../models/app-config");
+const util1 = require("../utils/get-activities");
+const util2 = require("../utils/update-Athlete");
 
 module.exports = function (passport) {
   passport.serializeUser((user, done) => done(null, user.id));
@@ -39,6 +40,7 @@ module.exports = function (passport) {
           active: true,
           numactivities: 0,
           validactivities: 0,
+          clubs: [],
         };
         // Check if logging athlete is member of a club of any application in DB
         let userClubsArray;
@@ -80,10 +82,11 @@ module.exports = function (passport) {
             await user.save();
             done(null, user);
           } else {
+            newUser.clubs = userClubsArray;
             user = await User.create(newUser);
             // Get athlete activity history
-            await utils.getActivities(accessToken);
-            await utils.updateAthlete(user.uid, userClubsArray);
+            await util1.getActivities(accessToken);
+            await util2.updateAthlete(user.uid);
             done(null, user);
           }
         } catch (err) {
