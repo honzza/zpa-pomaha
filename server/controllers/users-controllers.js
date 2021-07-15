@@ -2,10 +2,11 @@ const HttpError = require("../models/http-error");
 const User = require("../models/user");
 
 const getUsers = async (req, res, next) => {
+  const clubParam = req.params.clubId;
   let users;
   try {
     users = await User.find(
-      { active: true },
+      { $and: [{ active: true }, { clubs: parseInt(clubParam) }] },
       "-shortlivedATC -refreshTC -expirationATC -scope -_id -createdAt -updatedAt -active"
     );
   } catch (err) {

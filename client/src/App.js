@@ -1,6 +1,7 @@
 import MiniDrawer from "./components/MiniDrawer";
 import Splash from "./components/Splash";
 import AuthContext from "./context/auth-context";
+import ConfigContext from "./context/config-context";
 import React, { useState, useCallback, useEffect, Suspense } from "react";
 import {
   BrowserRouter as Router,
@@ -92,22 +93,22 @@ function App() {
     routes = (
       <Switch>
         <Route key={1} exact path="/dashboard">
-          <User user={loggedUser} />
+          <User />
         </Route>
         <Route key={2} exact path="/run">
-          <Activity type="run" label="BĚH" user={loggedUser} />
+          <Activity type="run" label="BĚH" />
         </Route>
         <Route key={3} exact path="/ride">
-          <Activity type={"ride"} label={"CYKLO"} user={loggedUser} />
+          <Activity type={"ride"} label={"CYKLO"} />
         </Route>
         <Route key={4} exact path="/nski">
-          <Activity type={"nski"} label={"BĚŽKY"} user={loggedUser} />
+          <Activity type={"nski"} label={"BĚŽKY"} />
         </Route>
         <Route key={5} exact path="/swim">
-          <Activity type={"swim"} label={"PLAVÁNÍ"} user={loggedUser} />
+          <Activity type={"swim"} label={"PLAVÁNÍ"} />
         </Route>
         <Route key={6} exact path="/walk">
-          <Activity type={"walk"} label={"CHŮZE"} user={loggedUser} />
+          <Activity type={"walk"} label={"CHŮZE"} />
         </Route>
         <Route key={7} exact path="/charity" component={Charity} />
         <Route key={8} exact path="/about" component={About} />
@@ -125,44 +126,51 @@ function App() {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+      value={{
+        isLoggedIn: isLoggedIn,
+        loggedUser: loggedUser,
+        login: login,
+        logout: logout,
+      }}
     >
-      {isCheckingAuth && <Splash />}
-      {appConfig && appConfig.length > 1 && (
-        <SimpleDialog open={open} onClose={handleClose} clubList={appConfig} />
-      )}
-      {!isCheckingAuth && !open && (
-        <Router>
-          {loggedUser && (
-            <MiniDrawer user={loggedUser} config={appConfig}>
-              <main>
-                {error && (
-                  <SnackMsg text={error} severity={"info"} history={true} />
-                )}
-                {isLoggedIn && message && (
-                  <SnackMsg text={message} severity={"success"} />
-                )}
-                {isLoading && (
-                  <Backdrop className={classes.backdrop} open={isLoading}>
-                    <CircularProgress color="inherit" />
-                  </Backdrop>
-                )}
-                {!isLoading && (
-                  <Suspense
-                    fallback={
-                      <Backdrop className={classes.backdrop} open={isLoading}>
-                        <CircularProgress color="inherit" />
-                      </Backdrop>
-                    }
-                  >
-                    {routes}
-                  </Suspense>
-                )}
-              </main>
-            </MiniDrawer>
-          )}
-        </Router>
-      )}
+      <ConfigContext.Provider value={{ appConfig: appConfig }}>
+        {isCheckingAuth && <Splash />}
+        {appConfig && appConfig.length > 1 && (
+          <SimpleDialog open={open} onClose={handleClose} />
+        )}
+        {!isCheckingAuth && !open && (
+          <Router>
+            {loggedUser && (
+              <MiniDrawer>
+                <main>
+                  {error && (
+                    <SnackMsg text={error} severity={"info"} history={true} />
+                  )}
+                  {isLoggedIn && message && (
+                    <SnackMsg text={message} severity={"success"} />
+                  )}
+                  {isLoading && (
+                    <Backdrop className={classes.backdrop} open={isLoading}>
+                      <CircularProgress color="inherit" />
+                    </Backdrop>
+                  )}
+                  {!isLoading && (
+                    <Suspense
+                      fallback={
+                        <Backdrop className={classes.backdrop} open={isLoading}>
+                          <CircularProgress color="inherit" />
+                        </Backdrop>
+                      }
+                    >
+                      {routes}
+                    </Suspense>
+                  )}
+                </main>
+              </MiniDrawer>
+            )}
+          </Router>
+        )}
+      </ConfigContext.Provider>
     </AuthContext.Provider>
   );
 }

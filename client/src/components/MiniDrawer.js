@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
-
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
@@ -33,6 +32,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 
 import AuthContext from "../context/auth-context";
+import ConfigContext from "../context/config-context";
 import Footer from "./Footer";
 
 const drawerWidth = 240;
@@ -105,6 +105,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MiniDrawer(props) {
   const auth = useContext(AuthContext);
+  const config = useContext(ConfigContext);
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -140,8 +141,8 @@ export default function MiniDrawer(props) {
     { text: "O aplikaci", link: "/about", icon: <InfoOutlinedIcon /> },
   ];
 
-  const { name, avatar, uid } = props.user;
-  const { app_title } = props.config;
+  const { name, avatar, uid } = auth.loggedUser;
+  const { app_title } = config.appConfig;
 
   return (
     <div className={classes.root}>

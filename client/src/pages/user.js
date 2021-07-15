@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import UsersList from "../components/UsersList";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SnackMsg from "../components/UIElements/SnackMsg";
 import { useHttpClient } from "../hooks/http-hook";
 import { makeStyles } from "@material-ui/core/styles";
+import AuthContext from "../context/auth-context";
+import ConfigContext from "../context/config-context";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -13,17 +15,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const User = (props) => {
+const User = () => {
+  const auth = useContext(AuthContext);
+  const config = useContext(ConfigContext);
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
-  const uid = props.user.uid;
+  const uid = auth.loggedUser.uid;
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_BACKEND_PATH}/api/user`,
+          `${process.env.REACT_APP_BACKEND_PATH}/api/user/${config.appConfig.club_id}`,
           "GET",
           null
         );
@@ -31,7 +35,7 @@ const User = (props) => {
       } catch (err) {}
     };
     fetchUsers();
-  }, [sendRequest]);
+  }, [sendRequest, config.appConfig.club_id]);
 
   return (
     <React.Fragment>
