@@ -6,6 +6,7 @@ import SnackMsg from "../components/UIElements/SnackMsg";
 import { useHttpClient } from "../hooks/http-hook";
 import { makeStyles } from "@material-ui/core/styles";
 import AuthContext from "../context/auth-context";
+import ConfigContext from "../context/config-context";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Activity = (props) => {
   const auth = useContext(AuthContext);
+  const config = useContext(ConfigContext);
   const { type, label } = props;
   const classes = useStyles();
   const { isLoading, error, sendRequest } = useHttpClient();
@@ -26,7 +28,7 @@ const Activity = (props) => {
     const fetchActivities = async () => {
       try {
         const responseData = await sendRequest(
-          `${process.env.REACT_APP_BACKEND_PATH}/api/activity/${type}`,
+          `${process.env.REACT_APP_BACKEND_PATH}/api/activity/${type}/${config.appConfig.club_id}`,
           "GET",
           null
         );
@@ -34,7 +36,7 @@ const Activity = (props) => {
       } catch (err) {}
     };
     fetchActivities();
-  }, [sendRequest, type]);
+  }, [sendRequest, type, config.appConfig.club_id]);
 
   return (
     <React.Fragment>

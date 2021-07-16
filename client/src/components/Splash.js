@@ -33,8 +33,8 @@ const Splash = () => {
       alignItems="center"
       className={classes.container}
     >
-      <Typography className={classes.text}>ZPA pomáhá sportem</Typography>
-      <Typography className={classes.text2}>Načítám aplikaci...</Typography>
+      <Typography className={classes.text}>pohyb pomáhá</Typography>
+      <Typography className={classes.text2}>načítám aplikaci...</Typography>
       <Box className={classes.progress}>
         <LinearProgress />
       </Box>

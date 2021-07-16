@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [appConfig, setAppConfig] = useState({
-    app_title: "Pohyb pomáhá",
+    app_title: "pohyb pomáhá",
   });
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const { isLoading, message, error, sendRequest } = useHttpClient();

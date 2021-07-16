@@ -126,7 +126,7 @@ const About = () => {
           </Backdrop>
         )}
         <Typography variant="h5" align="center" className={classes.title}>
-          Novinky a plánovaná rozšíření
+          novinky a plánovaná rozšíření
         </Typography>
         <Table stickyHeader size="small" aria-label="a dense table">
           <TableHead>

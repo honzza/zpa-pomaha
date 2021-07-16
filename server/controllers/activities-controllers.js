@@ -4,13 +4,16 @@ const activityTypes = ["ride", "run", "swim", "nski", "walk"];
 
 const getActivityByType = async (req, res, next) => {
   const activityParam = req.params.activityType;
+  const clubParam = req.params.clubId;
   if (!activityTypes.includes(activityParam)) {
     return next(new HttpError("Activity does not exist", 404));
   }
   let activities;
   try {
     const nestedKey = `activity.${activityParam}.m`;
-    const query = { [nestedKey]: { $gt: 0 } };
+    const query = {
+      $and: [{ [nestedKey]: { $gt: 0 } }, { clubs: parseInt(clubParam) }],
+    };
     activities = await User.find(query);
   } catch (err) {
     return next(

@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const ConfigContext = createContext({
   appConfig: {
-    app_title: "Pohyb pomáhá",
+    app_title: "pohyb pomáhá",
   },
 });
 
