@@ -1,5 +1,9 @@
 const axios = require("axios");
 const Activity = require("../models/activity");
+const User = require("../models/user");
+const { updateAthlete } = require("./athlete-utils");
+
+// ---------- BULK ACTIVITY DOWNLOAD FROM STRAVA ----------
 
 const getActivities = async (accessToken) => {
   let page = 1;
@@ -50,4 +54,40 @@ const getActivities = async (accessToken) => {
   }
 };
 
+// ---------- ADMIN - UPLOAD ACTIVITIES ----------
+
+const uploadActivities = async (req, res, next) => {
+  let user = await User.findOne({ uid: req.params.uid });
+  // Refresh token
+  if (new Date() > user.expirationATC) {
+    try {
+      const tokens = await axios.post(
+        `https://www.strava.com/api/v3/oauth/token?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${user.refreshTC}`
+      );
+      user.shortlivedATC = tokens.data.access_token;
+      user.refreshTC = tokens.data.refresh_token;
+      user.expirationATC = tokens.data.expires_at * 1000;
+      user.save();
+    } catch (err) {}
+  }
+  await getActivities(user.shortlivedATC);
+  await updateAthlete(req.params.uid);
+  res.json("Aktivity byly staženy ze Stravy, je nutné načíst stránku znovu");
+};
+
+// ---------- ADMIN - DELETE ACTIVITIES ----------
+
+const deleteActivities = async (req, res, next) => {
+  let result;
+  try {
+    result = await Activity.deleteMany({ athlete_id: req.params.uid });
+  } catch (err) {
+    console.error(err);
+  }
+  await updateAthlete(req.params.uid);
+  res.json(result);
+};
+
 exports.getActivities = getActivities;
+exports.uploadActivities = uploadActivities;
+exports.deleteActivities = deleteActivities;

@@ -1,10 +1,12 @@
 const router = require("express").Router();
 const usersControllers = require("../controllers/users-controllers");
-const util1 = require("../utils/delete-activities");
-const util2 = require("../utils/upload-activities");
+const {
+  deleteActivities,
+  uploadActivities,
+} = require("../utils/activities-utils");
 
 router.get("/:clubId", usersControllers.getUsers);
-router.get("/activities/delete/:uid", util1.deleteActivities);
-router.get("/activities/upload/:uid", util2.uploadActivities);
+router.get("/activities/delete/:uid", deleteActivities);
+router.get("/activities/upload/:uid", uploadActivities);
 
 module.exports = router;

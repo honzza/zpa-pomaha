@@ -2,8 +2,8 @@ const StravaStrategy = require("passport-strava").Strategy;
 const User = require("../models/user");
 const axios = require("axios");
 const Config = require("../models/app-config");
-const util1 = require("../utils/get-activities");
-const util2 = require("../utils/update-Athlete");
+const { getActivities } = require("../utils/activities-utils");
+const { updateAthlete } = require("../utils/athlete-utils");
 
 module.exports = function (passport) {
   passport.serializeUser((user, done) => done(null, user.id));
@@ -85,8 +85,8 @@ module.exports = function (passport) {
             newUser.clubs = userClubsArray;
             user = await User.create(newUser);
             // Get athlete activity history
-            await util1.getActivities(accessToken);
-            await util2.updateAthlete(user.uid);
+            await getActivities(accessToken);
+            await updateAthlete(user.uid);
             done(null, user);
           }
         } catch (err) {

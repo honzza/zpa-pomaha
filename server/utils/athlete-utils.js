@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const Activity = require("../models/activity");
 
+//---------- UPDATE ATHLETES STATS IN THE DATABASE ----------
+
 const updateAthlete = async (userUid) => {
   try {
     let u = await User.findOne({ uid: userUid });
